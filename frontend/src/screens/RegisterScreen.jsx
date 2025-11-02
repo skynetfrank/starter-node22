@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router";
-import { register } from "../actions/userActions";
-import { USER_REGISTER_RESET } from "../constants/userConstants";
+import { useRegisterUserMutation } from "../api/usersApi";
 import Button from "../components/Button";
+import { userSignin as signinAction } from "../slices/userSlice";
 import { User, Mail, Lock, Eye, EyeOff, LogIn, Phone, Fingerprint } from "lucide-react";
 import logo from "../assets/logo.jpg";
 
@@ -24,34 +24,40 @@ export default function RegisterScreen() {
   const redirectInUrl = new URLSearchParams(search).get("redirect");
   const redirect = redirectInUrl ? redirectInUrl : "/";
 
-  const userRegister = useSelector((state) => state.userRegister);
-  const { userInfo, loading, error } = userRegister;
-
   const dispatch = useDispatch();
-  const submitHandler = (e) => {
+
+  // 1. Usar el hook de la mutación de registro
+  const [registerUser, { isLoading, error }] = useRegisterUserMutation();
+
+  // 2. Obtener userInfo para redirigir si el usuario ya está logueado
+  const { userInfo } = useSelector((state) => state.userSignin);
+
+  const submitHandler = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setMessage("Las contraseñas no coinciden");
-    } else {
-      setMessage(null);
-      dispatch(register(nombre, email, apellido, cedula, password, telefono));
+      return;
+    }
+    setMessage(null);
+
+    try {
+      // 3. Llamar a la mutación con un solo objeto
+      const userData = await registerUser({ nombre, apellido, email, cedula, password, telefono }).unwrap();
+      // 4. Despachar la acción para loguear al usuario
+      dispatch(signinAction(userData));
+      navigate(redirect);
+    } catch (err) {
+      // El error es manejado por el estado 'error' del hook.
+      // El `unwrap` lanza el error que es capturado aquí.
+      console.error("Fallo al registrar:", err);
     }
   };
+
   useEffect(() => {
     if (userInfo) {
       navigate(redirect);
     }
   }, [navigate, redirect, userInfo]);
-
-  // Limpia el mensaje de error del servidor después de unos segundos
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        dispatch({ type: USER_REGISTER_RESET });
-      }, 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [dispatch, error]);
 
   return (
     <div className="signin-container">
@@ -128,13 +134,13 @@ export default function RegisterScreen() {
           />
         </div>
 
-        {/* Muestra el error del servidor o el de la validación local */}
-        {(error || message) && <p className="signin-error">{error || message}</p>}
+        {/* 5. Mostrar el error de la API o el de validación local */}
+        {(error || message) && <p className="signin-error">{error?.data?.message || message}</p>}
 
         <div className="form-actions">
-          <Button type="submit" size="large" disabled={loading} className="btn-with-icon">
-            {loading ? <div className="spinner"></div> : <LogIn />}
-            <span>{loading ? "Registrando..." : "Registrar"}</span>
+          <Button type="submit" size="large" disabled={isLoading} className="btn-with-icon">
+            {isLoading ? <div className="spinner"></div> : <LogIn />}
+            <span>{isLoading ? "Registrando..." : "Registrar"}</span>
           </Button>
         </div>
 

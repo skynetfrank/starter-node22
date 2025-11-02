@@ -45,9 +45,24 @@ export const usersApi = createApi({
         { type: "Vendedores", id: "LIST" },
       ],
     }),
+    signinUser: build.mutation({
+      query: (credentials) => ({
+        url: "/users/signin",
+        method: "POST",
+        body: credentials,
+      }),
+      // Opcional: invalidar tags si el login debe refrescar datos específicos.
+      // Por ahora, no es estrictamente necesario para el login.
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetUsersQuery, useGetUserQuery, useRegisterUserMutation, useGetVendedoresQuery } = usersApi;
+export const {
+  useGetUsersQuery,
+  useGetUserQuery,
+  useRegisterUserMutation,
+  useGetVendedoresQuery,
+  useSigninUserMutation, // Exportamos el nuevo hook
+} = usersApi;

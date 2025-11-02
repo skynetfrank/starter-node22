@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router";
-import { signin } from "../actions/userActions";
+import { useSigninUserMutation } from "../api/usersApi"; // 1. Importar el hook de RTK Query
 import Button from "../components/Button";
+import { userSignin as signinAction } from "../slices/userSlice"; // 2. Importar la acción del slice
 import { Mail, Lock, LogIn } from "lucide-react";
 import logo from "../assets/logo.jpg";
 
@@ -15,13 +16,27 @@ export default function SigninScreen() {
   const redirectInUrl = new URLSearchParams(search).get("redirect");
   const redirect = redirectInUrl ? redirectInUrl : "/";
 
-  const userSignin = useSelector((state) => state.userSignin);
-  const { userInfo, loading, error } = userSignin;
-
   const dispatch = useDispatch();
-  const submitHandler = (e) => {
+
+  // 3. Usar el hook de la mutación
+  // isLoading es el equivalente a 'loading'
+  // error contiene la información del error si la petición falla
+  const [signinUser, { isLoading, error }] = useSigninUserMutation();
+
+  // Obtenemos userInfo del estado global para saber si ya hay una sesión
+  const { userInfo } = useSelector((state) => state.userSignin);
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    dispatch(signin(email, password));
+    try {
+      const userData = await signinUser({ email, password }).unwrap();
+      // 4. Si el login es exitoso, despachamos la acción para guardar los datos del usuario en el store
+      dispatch(signinAction(userData));
+      navigate(redirect);
+    } catch (err) {
+      // El error ya es manejado por el estado 'error' del hook
+      console.error("Failed to sign in:", err);
+    }
   };
 
   useEffect(() => {
@@ -35,9 +50,8 @@ export default function SigninScreen() {
       <form className="signin-form" onSubmit={submitHandler}>
         <img src={logo} alt="Logo" className="signin-logo" />
         <h2>Iniciar Sesión</h2>
-
-        {error && <p className="signin-error">{error}</p>}
-
+        {/* 5. Mostrar el mensaje de error que viene del hook */}
+        {error && <p className="signin-error">{error.data?.message || "Error al iniciar sesión"}</p>}
         <div className="input-group">
           <Mail className="input-icon" />
           <input type="email" placeholder="Correo Electrónico" required onChange={(e) => setEmail(e.target.value)} />
@@ -49,9 +63,9 @@ export default function SigninScreen() {
         </div>
 
         <div className="form-actions">
-          <Button type="submit" size="large" disabled={loading} className="btn-with-icon">
-            {loading ? <div className="spinner"></div> : <LogIn />}
-            <span>{loading ? "Iniciando..." : "Iniciar Sesión"}</span>
+          <Button type="submit" size="large" disabled={isLoading} className="btn-with-icon">
+            {isLoading ? <div className="spinner"></div> : <LogIn />}
+            <span>{isLoading ? "Iniciando..." : "Iniciar Sesión"}</span>
           </Button>
         </div>
 
