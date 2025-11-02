@@ -31,6 +31,9 @@ export const usersApi = createApi({
     getUser: build.query({
       // Corregido: la ruta correcta es /users/:id
       query: (id) => `/users/${id}`,
+      // Provee un tag específico para este usuario.
+      // Esto es crucial para la invalidación de caché.
+      providesTags: (result, error, id) => [{ type: "Users", id }],
     }),
     registerUser: build.mutation({
       // Mejorado: Acepta un solo objeto como argumento para mayor mantenibilidad.
@@ -54,6 +57,15 @@ export const usersApi = createApi({
       // Opcional: invalidar tags si el login debe refrescar datos específicos.
       // Por ahora, no es estrictamente necesario para el login.
     }),
+    updateUserProfile: build.mutation({
+      query: (updates) => ({
+        url: "/users/profile",
+        method: "PUT",
+        body: updates,
+      }),
+      // Invalida el tag del usuario específico para forzar un refetch de `getUser`.
+      invalidatesTags: (result, error, { userId }) => [{ type: "Users", id: userId }],
+    }),
   }),
 });
 
@@ -65,4 +77,5 @@ export const {
   useRegisterUserMutation,
   useGetVendedoresQuery,
   useSigninUserMutation, // Exportamos el nuevo hook
+  useUpdateUserProfileMutation, // Exportamos la nueva mutación
 } = usersApi;

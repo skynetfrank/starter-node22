@@ -1,68 +1,1402 @@
+/* ==========================================================================
+   1. VARIABLES DE COLOR Y TEMA
+   ========================================================================== */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --color-primary: #ffffff;
+  --color-secondary: #e9ecef;
+  --color-tertiary: #007bff;
+
+  --background-color: var(--color-primary);
+  --text-color: #212529;
+
+  --header-bg: var(--color-secondary);
+  --header-text: var(--text-color);
+
+  --footer-bg: var(--color-secondary);
+  --footer-text: var(--text-color);
+
+  --border-color: #dee2e6;
+
+  --btn-primary-text: #ffffff;
+}
+
+[data-theme="dark"] {
+  --color-primary: #212529;
+  --color-secondary: #343a40;
+  --color-tertiary: #61dafb;
+
+  --background-color: var(--color-primary);
+  --text-color: #f8f9fa;
+
+  --header-bg: #2c3e50;
+  /* Un azul oscuro para un look más moderno */
+  --header-text: #f8f9fa;
+
+  --footer-bg: #1c1e21;
+  --footer-text: #f8f9fa;
+
+  --border-color: #343a40;
+
+  --btn-primary-text: #212529;
+}
+
+/* ==========================================================================
+   2. RESET GLOBAL Y CONFIGURACIONES BASE
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  /* Define el tamaño de fuente base para que 1rem = 16px */
   line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.centrado {
+  width: 100%;
+  text-align: center;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* ==========================================================================
+   3. LAYOUT PRINCIPAL DE LA APLICACIÓN
+   ========================================================================== */
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+  grid-template-columns: 1fr;
+  grid-template-rows: 5rem 1fr 2rem;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* ==========================================================================
+   4. ESTILOS DE COMPONENTES (HEADER, MAIN, FOOTER)
+   ========================================================================== */
+header {
+  grid-area: header;
+  background-color: var(--header-bg);
+  color: var(--header-text);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  /* Espacio entre el logo y el título */
+  text-decoration: none;
+  color: inherit;
+}
+
+.header-logo {
+  height: 100px;
+  /* Ajusta la altura según necesites */
+  width: auto;
+  animation: subtle-pulse 1s ease-in-out infinite;
+}
+
+/* Estilos del logo para modo claro */
+.header-logo {
+  mix-blend-mode: multiply;
+}
+
+/* Estilos del logo para modo oscuro */
+[data-theme="dark"] .header-logo {
+  filter: invert(1);
+  mix-blend-mode: screen;
+}
+
+.header-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Ocultar el título en pantallas pequeñas para ahorrar espacio */
+@media (max-width: 600px) {
+  .header-title {
+    display: none;
+  }
+
+  .header-actions {
+    flex-grow: 1;
+    justify-content: center;
+  }
+}
+
+main {
+  grid-area: main;
+  padding: 0.5rem 0;
+}
+
+footer {
+  grid-area: footer;
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  /* 14px */
+  border-top: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ==========================================================================
+   5. ESTILOS PARA UTILIDADES (BOTÓN DE TEMA)
+   ========================================================================== */
+
+.theme-toggle-button {
+  background-color: transparent;
+  border: 2px solid transparent;
+  border-radius: 50%;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  /* Fijamos el tamaño para que no cambie durante la animación */
+  width: 44px;
+  height: 44px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+.theme-toggle-button:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+}
+
+.theme-icon {
+  color: var(--header-text);
+  position: absolute;
+  transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+}
+
+/* Estado inicial (Tema Claro) */
+.sun-icon {
+  opacity: 0;
+  transform: translateY(100%) rotate(90deg);
+}
+
+.moon-icon {
+  opacity: 1;
+  transform: translateY(0) rotate(0);
+}
+
+/* Estado final (Tema Oscuro) */
+[data-theme="dark"] .sun-icon {
+  opacity: 1;
+  transform: translateY(0) rotate(0);
+}
+
+[data-theme="dark"] .moon-icon {
+  opacity: 0;
+  transform: translateY(-100%) rotate(-90deg);
+}
+
+.header-icon-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 50%;
+  color: var(--header-text);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.header-icon-link:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+}
+
+/* --- ESTILOS PARA MENÚ DE PERFIL --- */
+
+.profile-menu-container {
+  position: relative;
+}
+
+.profile-avatar-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border: 2px solid var(--border-color);
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-avatar-icon {
+  color: var(--header-text);
+}
+
+.profile-initials {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-tertiary);
+  color: var(--btn-primary-text);
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 50%;
+  text-transform: uppercase;
+}
+
+/* --- FIN DE ESTILOS PARA MENÚ DE PERFIL --- */
+
+/* ==========================================================================
+   6. COMPONENTES REUTILIZABLES
+   ========================================================================== */
+
+.btn {
+  display: inline-block;
+  font-weight: 500;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-primary {
+  color: var(--btn-primary-text);
+  background-color: var(--color-tertiary);
+  border-color: var(--color-tertiary);
+}
+
+.btn-primary:hover {
+  filter: brightness(90%);
+}
+
+.btn-outline {
+  color: var(--color-tertiary);
+  background-color: transparent;
+  border-color: var(--color-tertiary);
+}
+
+.btn-outline:hover {
+  color: var(--btn-primary-text);
+  background-color: var(--color-tertiary);
+  border-color: var(--color-tertiary);
+}
+
+.btn-small {
+  width: 70px;
+}
+
+.btn-medium {
+  width: 150px;
+}
+
+.btn-large {
+  width: 100%;
+}
+
+/* Utilidad para botones que contienen un ícono y texto */
+.btn-with-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  /* Un poco más de padding para acomodar el ícono */
+}
+
+/* ==========================================================================
+   7. ESTILOS PARA FORMULARIOS
+   ========================================================================== */
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.form {
+  max-width: 32rem;
+  width: 100%;
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  background-color: var(--color-primary);
+}
+
+.form > div {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form input {
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.form .btn {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.form-link {
+  flex-direction: row !important;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.form-link a {
+  color: var(--color-tertiary);
+  text-decoration: none;
+}
+
+.form-link a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   5. ESTILOS PARA UTILIDADES (BOTÓN DE TEMA)
+   ========================================================================== */
+
+.theme-toggle-button {
+  background-color: transparent;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  /* Fijamos el tamaño para que no cambie durante la animación */
+  width: 44px;
+  height: 44px;
+}
+
+.theme-toggle-button:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+}
+
+.theme-icon {
+  color: var(--header-text);
+  position: absolute;
+  transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+}
+
+/* Estado inicial (Tema Claro) */
+.sun-icon {
+  opacity: 0;
+  transform: translateY(100%) rotate(90deg);
+}
+
+.moon-icon {
+  opacity: 1;
+  transform: translateY(0) rotate(0);
+}
+
+/* Estado final (Tema Oscuro) */
+[data-theme="dark"] .sun-icon {
+  opacity: 1;
+  transform: translateY(0) rotate(0);
+}
+
+[data-theme="dark"] .moon-icon {
+  opacity: 0;
+  transform: translateY(-100%) rotate(-90deg);
+}
+
+/* --- ESTILOS PARA SPLASH SCREEN --- */
+
+.splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  /* Apila el logo y el texto verticalmente */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  /* El splash screen empieza invisible */
+  pointer-events: none;
+  /* Evita que sea clickeable cuando está oculto */
+}
+
+/* Clase para la animación de aparición */
+.splash-screen-fade-in {
+  animation: fadeIn 1.5s ease-in forwards;
+}
+
+/* Clase para la animación de desaparición */
+.splash-screen-fade-out {
+  animation: fadeOut 0.5s ease-out forwards;
+}
+
+.splash-logo {
+  width: 150px;
+  /* Ancho del logo */
+  height: 150px;
+  /* Alto del logo */
+  object-fit: contain;
+}
+
+.splash-text {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: black;
+  text-transform: uppercase;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
   }
-  a:hover {
-    color: #747bff;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+/* --- FIN DE ESTILOS PARA SPLASH SCREEN --- */
+
+/* ==========================================================================
+   8. ESTILOS PARA SIGNIN / REGISTER
+   ========================================================================== */
+
+.signin-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  /* Alinea arriba para que no se corte en pantallas pequeñas */
+  min-height: calc(100vh - 7rem);
+  /* header + footer height */
+  padding: 2rem 1rem;
+}
+
+.signin-form {
+  background-color: var(--color-primary);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+  width: 100%;
+  max-width: 24rem;
+  /* Más compacto */
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.signin-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  align-self: center;
+  margin-bottom: 0.5rem;
+}
+
+.signin-form h2 {
+  text-align: center;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: #9ca3af;
+  /* Gris */
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  /* Espacio para el ícono */
+  border-radius: 0.375rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+}
+
+.signin-error {
+  color: #ef4444;
+  /* Rojo */
+  background-color: rgba(239, 68, 68, 0.1);
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.form-actions {
+  margin-top: 0.5rem;
+}
+
+.signin-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
+}
+
+.signin-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #6b7280;
+  /* Gris */
+}
+
+.signin-footer a {
+  color: var(--color-tertiary);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.signin-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Añade esto a tu archivo CSS principal, como src/index.css */
+
+/* --- Estilos para la animación del Menú de Perfil --- */
+
+/* Estado base del menú (oculto) */
+.profile-menu {
+  opacity: 0;
+  transform: translateY(-10px);
+  /* Ligeramente desplazado hacia arriba */
+  pointer-events: none;
+  /* Impide clics cuando está oculto */
+  transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
+
+  /* Estilos de posicionamiento y apariencia (puedes ajustarlos) */
+  position: absolute;
+  top: calc(100% + 8px);
+  /* Se posiciona debajo del botón del avatar */
+  right: 0;
+  z-index: 100;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 160px;
+}
+
+/* Estilos para los enlaces dentro del menú */
+.profile-menu a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  /* Ajustado al padding general */
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+  border-radius: 4px;
+  /* Bordes redondeados para los items */
+}
+
+.profile-menu a:hover {
+  background-color: var(--color-secondary);
+}
+
+/* Estado visible del menú cuando tiene la clase .open */
+.profile-menu.open {
+  opacity: 1;
+  transform: translateY(0);
+  /* Vuelve a su posición original */
+  pointer-events: auto;
+  /* Permite clics cuando es visible */
+}
+
+/* ==========================================================================
+   9. ESTILOS PARA HOME SCREEN
+   ========================================================================== */
+
+.home-container {
+  position: relative;
+  /* Necesario para posicionar la marca de agua absolutamente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Calcula la altura para llenar el espacio de <main> */
+  height: calc(100vh - 5rem - 2rem - 1rem);
+  /* 100vh - header - footer - padding de main */
+  text-align: center;
+  overflow: hidden;
+  /* Evita que la marca de agua se salga si es muy grande */
+}
+
+.home-watermark-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 400px;
+  /* El doble de los 100px del logo en el header */
+  width: auto;
+  opacity: 0.35;
+  /* Efecto de marca de agua */
+  z-index: -1;
+  /* Se asegura que esté detrás del texto y otros elementos */
+  pointer-events: none;
+  /* Evita que la imagen sea interactuable (ej. arrastrar) */
+  mix-blend-mode: multiply;
+  /* Para integrar mejor con el fondo */
+}
+
+[data-theme="dark"] .home-watermark-logo {
+  filter: invert(1);
+  mix-blend-mode: screen;
+}
+
+/* ==========================================================================
+   10. COMPONENTES DE UI (SPINNER, MESSAGEBOX)
+   ========================================================================== */
+
+/* --- Loading Spinner --- */
+.loading-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Ocupa el espacio disponible en el contenedor <main> */
+  height: calc(100vh - 5rem - 2rem - 1rem);
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid var(--color-secondary);
+  border-top-color: var(--color-tertiary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* La animación @keyframes spin ya está definida en la sección de signin */
+
+/* --- Message Box --- */
+.message-box {
+  padding: 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid;
+  margin: 1rem;
+  text-align: center;
+}
+
+.message-box.info {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+}
+
+.message-box.success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.message-box.danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.message-box.closable {
+  cursor: pointer;
+  transition: opacity 0.2s ease-out;
+}
+
+/* Animación de pulsación sutil para el logo del header */
+@keyframes subtle-pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.03);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ==========================================================================
+   11. ESTILOS PARA PROFILE SCREEN
+   ========================================================================== */
+
+.profile-screen-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 1rem;
+}
+
+.profile-form {
+  background-color: var(--color-primary);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+  width: 100%;
+  max-width: 32rem;
+  /* Un poco más ancho que el de signin */
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.profile-form-actions {
+  display: flex;
+  flex-direction: column;
+  /* Apilado por defecto para móviles */
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* En pantallas más grandes, los botones se ponen en fila */
+@media (min-width: 768px) {
+  .profile-form-actions {
+    flex-direction: row;
+  }
+}
+
+/* ==========================================================================
+   12. ESTILOS PARA PRODUCT LIST SCREEN
+   ========================================================================== */
+
+.product-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  /* Bordes de celda unidos */
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  /* Sombra sutil */
+  border-radius: 8px;
+  /* Bordes redondeados para la tabla */
+  overflow: hidden;
+  /* Asegura que el contenido respete el border-radius */
+  background-color: var(--color-primary);
+}
+
+.product-list-table thead tr {
+  background-color: var(--color-secondary);
+  /* Fondo gris claro para el encabezado */
+  color: var(--text-color);
+  text-align: left;
+  font-weight: 600;
+}
+
+.product-list-table th,
+.product-list-table td {
+  padding: 12px 15px;
+}
+
+.product-list-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Para la última fila, eliminamos el borde inferior */
+.product-list-table tbody tr:last-of-type {
+  border-bottom: none;
+}
+
+/* Efecto hover para las filas, usando un color de fondo sutil */
+.product-list-table tbody tr:hover {
+  background-color: var(--color-secondary);
+  cursor: pointer;
+}
+
+/* Estilo para la columna de ID para que sea menos prominente */
+.product-list-table .product-id {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #6c757d;
+  /* Un gris neutral */
+}
+
+[data-theme="dark"] .product-list-table .product-id {
+  color: #adb5bd;
+}
+
+/* ==========================================================================
+   13. ESTILOS PARA PAGINACIÓN
+   ========================================================================== */
+
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding: 0.5rem;
+  background-color: var(--color-primary);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.pagination-button {
+  background-color: var(--color-secondary);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background-color: var(--color-tertiary);
+  color: var(--btn-primary-text);
+  border-color: var(--color-tertiary);
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+/* ==========================================================================
+   14. ESTILOS PARA IMAGE UPLOADER (DISEÑO MEJORADO)
+   ========================================================================== */
+
+.image-uploader-container {
+  background-color: var(--color-primary);
+  border-radius: 8px;
+  width: 100%;
+}
+
+/* Área de carga grande cuando no hay imágenes */
+.upload-area-full {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  padding: 2rem;
+  min-height: 200px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.upload-area-full:hover {
+  background-color: var(--color-secondary);
+  border-color: var(--color-tertiary);
+}
+
+.upload-area-full.is-processing {
+  cursor: wait;
+}
+
+.upload-icon-large {
+  color: var(--color-tertiary);
+  margin-bottom: 1rem;
+}
+
+.upload-text-large {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.upload-text-small {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.image-preview-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+/* Tarjeta de previsualización de imagen */
+.image-preview-card {
+  width: 120px;
+  background-color: var(--color-secondary);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.image-preview-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border: 1px solid var(--border-color);
+}
+
+.image-preview-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: scale(0.8);
+}
+
+.image-preview-card:hover .remove-image-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.remove-image-btn:hover {
+  background-color: white;
+  border-color: #bbb;
+}
+
+/* Información del archivo debajo de la imagen */
+.image-info {
+  font-size: 0.75rem;
+  background-color: var(--color-primary);
+  border-top: 1px solid var(--border-color);
+}
+
+.file-name {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.file-size {
+  display: block;
+  color: #6c757d;
+  margin-top: 2px;
+}
+
+/* Botón pequeño para añadir más imágenes */
+.upload-area-small {
+  width: 120px;
+  height: 120px;
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  background-color: var(--color-secondary);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  font-size: 0.9rem;
+  text-align: center;
+  align-self: flex-start;
+  position: relative;
+  /* Alinea con el top de las tarjetas */
+}
+
+.upload-area-small:hover {
+  background-color: #e2e6ea;
+  border-color: var(--color-tertiary);
+}
+
+[data-theme="dark"] .upload-area-small:hover {
+  background-color: #495057;
+}
+
+.upload-counter {
+  font-size: 0.75rem;
+  position: absolute;
+  bottom: 5px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 1px 6px;
+  border-radius: 8px;
+}
+
+[data-theme="dark"] .upload-text-small,
+[data-theme="dark"] .upload-counter,
+[data-theme="dark"] .file-size,
+.spinner-small {
+  color: var(--color-tertiary);
+}
+
+.plus-icon-overlay {
+  position: absolute;
+  background-color: var(--color-tertiary);
+  color: var(--color-primary);
+  border-radius: 50%;
+  padding: 2px;
+  border: 2px solid var(--color-primary);
+  bottom: 25px;
+  right: 25px;
+}
+
+/* ==========================================================================
+   15. ESTILOS PARA IMAGE UPLOADER SCREEN
+   ========================================================================== */
+
+.uploader-screen-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.uploader-screen-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.uploader-screen-description {
+  font-size: 1rem;
+  color: #6c757d;
+  margin-bottom: 2rem;
+}
+
+[data-theme="dark"] .uploader-screen-description {
+  color: #adb5bd;
+}
+
+.uploader-wrapper-card {
+  background-color: var(--color-primary);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+}
+
+.file-list-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1.5rem;
+}
+
+.file-list-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.file-list-item:last-child {
+  border-bottom: none;
+}
+
+.file-icon {
+  color: var(--color-tertiary);
+  margin-right: 0.75rem;
+}
+
+.file-name-display {
+  flex-grow: 1;
+  font-size: 0.95rem;
+}
+
+.file-size-display {
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-family: monospace;
+}
+
+[data-theme="dark"] .file-size-display {
+  color: #adb5bd;
+}
+
+.no-files-message {
+  color: #6c757d;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+[data-theme="dark"] .no-files-message {
+  color: #adb5bd;
+}
+
+/* ==========================================================================
+   16. ESTILOS PARA IMAGE UPLOADER SCREEN - RESULTADOS
+   ========================================================================== */
+/* Esta sección contiene los estilos para la barra de progreso, la imagen principal
+   y las miniaturas que se muestran después de la subida de imágenes. */
+
+.upload-results-section {
+  background-color: var(--color-primary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+  margin-top: 1rem; /* Espacio entre el uploader y los resultados */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el contenido horizontalmente */
+  gap: 1.5rem; /* Espacio entre los bloques de contenido */
+}
+
+.upload-progress-bar-container {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.upload-progress-text {
+  font-size: 0.95rem;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.upload-progress-bar {
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  appearance: none; /* Elimina estilos por defecto del navegador */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: none;
+  background-color: var(--color-secondary); /* Fondo de la barra */
+}
+
+/* Estilo para la barra de progreso rellenada */
+.upload-progress-bar::-webkit-progress-value {
+  background-color: var(--color-tertiary);
+  border-radius: 5px;
+  transition: width 0.3s ease-in-out;
+}
+
+.upload-progress-bar::-moz-progress-bar {
+  background-color: var(--color-tertiary);
+  border-radius: 5px;
+  transition: width 0.3s ease-in-out;
+}
+
+.main-image-display {
+  text-align: center;
+  width: 100%;
+  max-width: 150px; /* Un tamaño más generoso para la imagen principal */
+  margin: 0 auto; /* Centra el bloque */
+}
+
+.main-image-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.75rem;
+}
+
+.main-uploaded-image {
+  width: 150px;
+  height: 150px;
+  border: 2px solid var(--color-tertiary); /* Borde distintivo */
+  border-radius: 8px;
+  object-fit: contain; /* Asegura que la imagen se ajuste sin recortarse */
+  margin-bottom: 0.5rem;
+}
+
+.image-url-link a {
+  color: var(--color-tertiary);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.image-url-link a:hover {
+  text-decoration: underline;
+}
+
+.thumbnails-display {
+  width: 100%;
+  text-align: center;
+}
+
+.thumbnails-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.75rem;
+}
+
+.thumbnails-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centra las miniaturas */
+  gap: 10px; /* Espacio entre miniaturas */
+}
+
+.uploaded-thumbnail {
+  width: 60px; /* Tamaño fijo como se solicitó */
+  height: 60px;
+  object-fit: cover; /* Recorta para llenar el espacio */
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  transition: transform 0.2s ease;
+}
+
+.uploaded-thumbnail:hover {
+  transform: scale(1.05); /* Pequeño efecto al pasar el ratón */
+}
+
+.upload-action-button {
+  margin-top: 1rem; /* Espacio encima del botón */
+  width: auto; /* Ajusta el ancho al contenido */
+  padding: 0.75rem 1.5rem; /* Más padding para un botón más prominente */
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  .upload-results-section {
+    padding: 1rem;
+  }
+ 
 }

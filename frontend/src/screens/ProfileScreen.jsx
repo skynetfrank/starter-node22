@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { detailsUser, updateUserProfile } from "../actions/userActions";
-import { signout } from "../actions/userActions";
-import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants";
+import { useGetUserQuery, useUpdateUserProfileMutation } from "../api/usersApi";
+import { userSignin as signinAction, userSignout } from "../slices/userSlice";
 import Button from "../components/Button";
-import logo from "../assets/logo.jpg";
 import { User, Mail, Lock, Eye, EyeOff, Fingerprint, Phone, Save, LogOut } from "lucide-react";
-import Swal from "sweetalert2";
 import MessageBox from "../components/MessageBox";
 
 export default function ProfileScreen() {
@@ -23,66 +20,75 @@ export default function ProfileScreen() {
 
   const userSignin = useSelector((state) => state.userSignin);
   const { userInfo } = userSignin;
-  const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, user } = userDetails;
-  const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
-  const { success: successUpdate, error: errorUpdate, loading: loadingUpdate } = userUpdateProfile;
   const dispatch = useDispatch();
 
+  // 1. Usar RTK Query para obtener los datos del perfil del usuario
+  const { data: user, isLoading, error: errorLoadingUser } = useGetUserQuery(userInfo._id);
+
+  // 2. Usar RTK Query para la mutación de actualización de perfil
+  const [updateProfile, { isLoading: loadingUpdate, error: errorUpdate, isSuccess: successUpdate }] =
+    useUpdateUserProfileMutation();
+
   useEffect(() => {
-    if (!user) {
-      dispatch({ type: USER_UPDATE_PROFILE_RESET });
-      dispatch(detailsUser(userInfo._id));
-    } else {
+    // Rellenar el formulario cuando los datos del usuario se cargan desde la API
+    if (user) {
       setNombre(user.nombre || " ");
       setEmail(user.email || " ");
       setApellido(user.apellido || " ");
       setCedula(user.cedula || " ");
       setTelefono(user.telefono || " ");
     }
-  }, [dispatch, userInfo._id, user, successUpdate]);
+  }, [user]);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
       setMessage("Las contraseñas no coinciden");
     } else {
       setMessage(null);
-      dispatch(
-        updateUserProfile({
-          userId: user._id,
+      // 3. Envolver la llamada a la mutación en un bloque try/catch
+      try {
+        const updatedUserData = await updateProfile({
+          userId: userInfo._id, // Usar el ID del usuario en sesión
           nombre,
           email,
-          password,
+          password: password || undefined, // Enviar la clave solo si se ha escrito una nueva
           apellido,
           cedula,
           telefono,
-        })
-      );
+        }).unwrap(); // .unwrap() aquí para obtener los datos o el error
+
+        // 4. Actualizar el estado global con los nuevos datos del usuario y el token
+        dispatch(signinAction(updatedUserData));
+      } catch (err) {
+        console.error("Fallo al actualizar el perfil:", err);
+      }
     }
   };
 
   const signoutHandler = () => {
-    dispatch(signout());
+    dispatch(userSignout());
   };
 
   return (
     <div className="signin-container">
       <form className="profile-form" onSubmit={submitHandler}>
         <h2>Perfil de Usuario</h2>
-
-        {loading ? (
+        {isLoading ? (
           <div className="loading-spinner-container">
             <div className="loading-spinner"></div>
           </div>
         ) : (
           <>
-            {error && <MessageBox variant="danger">{error}</MessageBox>}
-            {errorUpdate && <MessageBox variant="danger">{errorUpdate}</MessageBox>}
+            {errorLoadingUser && (
+              <MessageBox variant="danger">{errorLoadingUser.data?.message || "Error al cargar el perfil"}</MessageBox>
+            )}
+            {errorUpdate && (
+              <MessageBox variant="danger">{errorUpdate.data?.message || "Error al actualizar"}</MessageBox>
+            )}
             {message && <MessageBox variant="danger">{message}</MessageBox>}
             {successUpdate && <MessageBox variant="success">Perfil actualizado correctamente</MessageBox>}
-
             <div className="input-group">
               <User className="input-icon" />
               <input
