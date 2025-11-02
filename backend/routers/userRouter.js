@@ -174,9 +174,11 @@ userRouter.put(
   expressAsyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
     if (user) {
-      user.nombre = req.body.nombre || user.nombre;
-      user.apellido = req.body.apellido || user.apellido;
-      user.email = req.body.email || user.email;
+      // Usar el operador de anulación de nulos (??) para permitir la actualización
+      // a valores "falsy" como cadenas vacías, pero no a null o undefined.
+      user.nombre = req.body.nombre ?? user.nombre;
+      user.apellido = req.body.apellido ?? user.apellido;
+      user.email = req.body.email ?? user.email;
       user.isAdmin = Boolean(req.body.isAdmin);
       user.isVendedor = Boolean(req.body.isVendedor);
 

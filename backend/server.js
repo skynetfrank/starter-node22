@@ -1,13 +1,17 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cors from "cors";
 import path from "path";
 import userRouter from "./routers/userRouter.js";
 
 dotenv.config();
 
 const app = express();
-
+// Habilita CORS para todas las rutas. En producción, puedes configurarlo
+// para permitir solo el dominio de tu frontend por mayor seguridad.
+// ej: app.use(cors({ origin: 'https://tu-frontend.com' }));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
