@@ -77,7 +77,6 @@ userRouter.post(
       email: createdUser.email,
       telefono: createdUser.telefono,
       isAdmin: createdUser.isAdmin,
-      isVendedor: createdUser.isVendedor,
       token: generateToken(createdUser),
     });
   })
