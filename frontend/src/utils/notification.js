@@ -40,7 +40,8 @@ export const showNotification = ({ type, title, text, confirmButtonText = "OK", 
   };
 
   Swal.fire(config).then((result) => {
-    if (result.isConfirmed && onConfirm) {
+    // Ejecutar onConfirm si la alerta fue confirmada O si fue cerrada por el temporizador
+    if ((result.isConfirmed || result.dismiss === Swal.DismissReason.timer) && onConfirm) {
       onConfirm();
     }
   });

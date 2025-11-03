@@ -4,7 +4,8 @@ import { useGetUserQuery, useUpdateUserProfileMutation } from "../api/usersApi";
 import { userSignin as signinAction, userSignout } from "../slices/userSlice";
 import Button from "../components/Button";
 import { User, Mail, Lock, Eye, EyeOff, Fingerprint, Phone, Save, LogOut } from "lucide-react";
-import { showNotification } from "../utils/notification"; // 1. Importamos nuestra utilidad
+import useApiNotification from "../hooks/useApiNotification"; // 1. Importamos el nuevo hook
+import useCedulaValidation from "../hooks/useCedulaValidation";
 
 export default function ProfileScreen() {
   const [nombre, setNombre] = useState("");
@@ -26,8 +27,15 @@ export default function ProfileScreen() {
   const { data: user, isLoading, error: errorLoadingUser } = useGetUserQuery(userInfo._id);
 
   // 2. Usar RTK Query para la mutación de actualización de perfil
-  const [updateProfile, { isLoading: loadingUpdate, error: errorUpdate, isSuccess: successUpdate }] =
-    useUpdateUserProfileMutation();
+  const [updateProfile, mutationState] = useUpdateUserProfileMutation();
+  const { isLoading: loadingUpdate, error: errorUpdate } = mutationState;
+
+  // 3. Instanciar el hook de notificaciones
+  useApiNotification(mutationState, {
+    loading: "Actualizando perfil...",
+    success: "Tu información ha sido guardada correctamente.",
+    error: "Fallo al actualizar el perfil.",
+  });
 
   useEffect(() => {
     // Rellenar el formulario cuando los datos del usuario se cargan desde la API
@@ -40,13 +48,21 @@ export default function ProfileScreen() {
     }
   }, [user]);
 
+  const validateCedula = useCedulaValidation();
+
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    const cedulaError = validateCedula(cedula);
+    if (cedulaError) {
+      setMessage(cedulaError);
+      return;
+    }
 
     if (password !== confirmPassword) {
       setMessage("Las contraseñas no coinciden");
     } else {
-      setMessage(null);
+      setMessage(null); // Limpiamos mensajes de validación local
       // 3. Envolver la llamada a la mutación en un bloque try/catch
       try {
         const updatedUserData = await updateProfile({
@@ -61,14 +77,8 @@ export default function ProfileScreen() {
 
         // 4. Actualizar el estado global con los nuevos datos del usuario y el token
         dispatch(signinAction(updatedUserData));
-
-        // 5. Mostrar notificación de éxito
-        showNotification({
-          type: "success",
-          title: "Perfil Actualizado",
-          text: "Tu información ha sido guardada correctamente.",
-        });
       } catch (err) {
+        // El error ya es manejado por el hook useApiNotification
         console.error("Fallo al actualizar el perfil:", err);
       }
     }
@@ -93,8 +103,6 @@ export default function ProfileScreen() {
             )}
             {errorUpdate && <p className="signin-error">{errorUpdate.data?.message || "Error al actualizar"}</p>}
             {message && <p className="signin-error">{message}</p>}
-            {/* Ya no necesitamos el mensaje de éxito aquí, lo maneja la notificación */}
-            {/* {successUpdate && <MessageBox variant="success">Perfil actualizado correctamente</MessageBox>} */}
 
             <div className="input-group">
               <User className="input-icon" />

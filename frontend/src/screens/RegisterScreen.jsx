@@ -5,8 +5,8 @@ import { useRegisterUserMutation } from "../api/usersApi";
 import Button from "../components/Button";
 import { userSignin as signinAction } from "../slices/userSlice";
 import useCedulaValidation from "../hooks/useCedulaValidation"; // Importamos el hook
+import useApiNotification from "../hooks/useApiNotification"; // 1. Importamos el hook de notificación
 import { User, Mail, Lock, Eye, EyeOff, LogIn, Phone, Fingerprint } from "lucide-react";
-import { showNotification } from "../utils/notification"; // 1. Importamos nuestra utilidad
 
 export default function RegisterScreen() {
   const navigate = useNavigate();
@@ -30,10 +30,28 @@ export default function RegisterScreen() {
   const dispatch = useDispatch();
 
   // 1. Usar el hook de la mutación de registro
-  const [registerUser, { isLoading, error }] = useRegisterUserMutation();
+  const [registerUser, mutationState] = useRegisterUserMutation();
+  const { isLoading } = mutationState;
 
   // 2. Obtener userInfo para redirigir si el usuario ya está logueado
   const { userInfo } = useSelector((state) => state.userSignin);
+
+  // 3. Instanciar el hook de notificaciones
+  useApiNotification(
+    mutationState,
+    {
+      loading: "Creando tu cuenta...",
+      success: "¡Registro exitoso! Serás redirigido.",
+      error: (err) => {
+        const errorMessage = err.data?.message || "";
+        if (errorMessage.includes("duplicate key") || errorMessage.includes("E11000")) {
+          return "El correo electrónico que ingresaste ya está en uso. Por favor, intenta con otro.";
+        }
+        return "Ocurrió un error al registrar la cuenta.";
+      },
+    },
+    () => navigate(redirect) // 4. Callback onSuccess para redirigir
+  );
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -51,25 +69,11 @@ export default function RegisterScreen() {
     setMessage(null);
 
     try {
-      // 3. Llamar a la mutación con un solo objeto
-      const userData = await registerUser({ nombre, apellido, email, cedula, password, telefono }).unwrap();
-      // 4. Despachar la acción para loguear al usuario
+      // 5. Llamar a la mutación y despachar la acción
+      const userData = await registerUser({ nombre, apellido, email, cedula, password, telefono }).unwrap(); // .unwrap() para manejar el catch
       dispatch(signinAction(userData));
-      navigate(redirect);
     } catch (err) {
-      // 2. Verificamos si el error es por correo duplicado
-      const errorMessage = err.data?.message || "Ocurrió un error inesperado.";
-      if (errorMessage.includes("duplicate key") || errorMessage.includes("E11000")) {
-        showNotification({
-          type: "error",
-          title: "Correo ya registrado",
-          text: "El correo electrónico que ingresaste ya está en uso. Por favor, intenta con otro.",
-        });
-      } else {
-        // Si es otro tipo de error, lo mostramos en el mensaje genérico
-        setMessage(errorMessage);
-      }
-      // El error general sigue siendo manejado por el estado 'error' del hook.
+      // El error ya es manejado por el hook useApiNotification
       console.error("Fallo al registrar:", err);
     }
   };

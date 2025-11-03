@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router";
-import { useSigninUserMutation } from "../api/usersApi"; // 1. Importar el hook de RTK Query
+import { useSigninUserMutation } from "../api/usersApi";
 import Button from "../components/Button";
-import { userSignin as signinAction } from "../slices/userSlice"; // 2. Importar la acción del slice
+import { userSignin as signinAction } from "../slices/userSlice";
+import useApiNotification from "../hooks/useApiNotification"; // 1. Importar el hook de notificación
 import { Mail, Lock, LogIn } from "lucide-react";
-import logo from "../assets/logo.jpg";
 
 export default function SigninScreen() {
   const navigate = useNavigate();
@@ -18,23 +18,41 @@ export default function SigninScreen() {
 
   const dispatch = useDispatch();
 
-  // 3. Usar el hook de la mutación
-  // isLoading es el equivalente a 'loading'
-  // error contiene la información del error si la petición falla
-  const [signinUser, { isLoading, error }] = useSigninUserMutation();
+  // 2. Usar el hook de la mutación y obtener el estado completo
+  const [signinUser, mutationState] = useSigninUserMutation();
+  const { isLoading } = mutationState;
 
   // Obtenemos userInfo del estado global para saber si ya hay una sesión
   const { userInfo } = useSelector((state) => state.userSignin);
+
+  // 3. Instanciar el hook de notificaciones
+  useApiNotification(
+    mutationState,
+    {
+      loading: "Iniciando sesión...",
+      success: "¡Bienvenido de vuelta!",
+      error: (err) => err?.data?.message || "Ocurrió un error al iniciar sesión.",
+    },
+    () => navigate(redirect), // 4. Callback para redirigir en caso de éxito
+    // 5. Opciones adicionales para las notificaciones
+    {
+      success: {
+        timer: 2000, // La alerta se cerrará después de 2 segundos
+        timerProgressBar: true, // Muestra una barra de progreso
+        showConfirmButton: false, // Oculta el botón "OK"
+      },
+    }
+  );
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       const userData = await signinUser({ email, password }).unwrap();
-      // 4. Si el login es exitoso, despachamos la acción para guardar los datos del usuario en el store
+      // 5. Si el login es exitoso, despachamos la acción para guardar los datos en el store
       dispatch(signinAction(userData));
-      navigate(redirect);
+      // La redirección ahora es manejada por el callback onSuccess del hook
     } catch (err) {
-      // El error ya es manejado por el estado 'error' del hook
+      // La notificación de error es manejada por el hook useApiNotification
       console.error("Failed to sign in:", err);
     }
   };
@@ -49,8 +67,8 @@ export default function SigninScreen() {
     <div className="signin-container">
       <form className="signin-form" onSubmit={submitHandler}>
         <h2>Iniciar Sesión</h2>
-        {/* 5. Mostrar el mensaje de error que viene del hook */}
-        {error && <p className="signin-error">{error.data?.message || "Error al iniciar sesión"}</p>}
+        {/* 6. El mensaje de error ahora es manejado por la notificación, por lo que se elimina de aquí */}
+
         <div className="input-group">
           <Mail className="input-icon" />
           <input type="email" placeholder="Correo Electrónico" required onChange={(e) => setEmail(e.target.value)} />
