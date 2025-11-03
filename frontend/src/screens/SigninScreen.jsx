@@ -48,7 +48,6 @@ export default function SigninScreen() {
   return (
     <div className="signin-container">
       <form className="signin-form" onSubmit={submitHandler}>
-        <img src={logo} alt="Logo" className="signin-logo" />
         <h2>Iniciar Sesión</h2>
         {/* 5. Mostrar el mensaje de error que viene del hook */}
         {error && <p className="signin-error">{error.data?.message || "Error al iniciar sesión"}</p>}

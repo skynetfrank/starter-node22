@@ -62,7 +62,6 @@ export default function RegisterScreen() {
   return (
     <div className="signin-container">
       <form className="signin-form" onSubmit={submitHandler} style={{ gap: "1rem" }}>
-        <img src={logo} alt="Logo" className="signin-logo" />
         <h2>Crear Cuenta</h2>
 
         <div className="input-group">
