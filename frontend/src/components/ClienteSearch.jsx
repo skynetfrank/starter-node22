@@ -18,7 +18,7 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
   const [foundClient, setFoundClient] = useState(null);
 
   const validateCedula = useCedulaValidation();
-  const [triggerSearch, { data, error, isLoading, isFetching }] = useLazyGetClienteByRifQuery();
+  const [triggerSearch, { data, error, isLoading, isFetching, reset }] = useLazyGetClienteByRifQuery();
 
   // Limpiar el estado interno cuando el modal se cierra
   useEffect(() => {
@@ -46,11 +46,16 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
     setValidationError(null);
     setFoundClient(null);
 
+    // 1. Reinicia el estado del hook de RTK Query a su estado inicial.
+    // Esto es crucial para que el useEffect se dispare en búsquedas subsecuentes del mismo RIF.
+    reset();
+
     const cedulaError = validateCedula(rif);
     if (cedulaError) {
       setValidationError(cedulaError);
       return;
     }
+    // 2. Dispara la búsqueda. Ya no es necesario el segundo argumento `false`.
     triggerSearch(rif.toUpperCase());
   };
 
