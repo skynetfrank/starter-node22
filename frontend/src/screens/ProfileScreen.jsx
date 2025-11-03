@@ -4,7 +4,7 @@ import { useGetUserQuery, useUpdateUserProfileMutation } from "../api/usersApi";
 import { userSignin as signinAction, userSignout } from "../slices/userSlice";
 import Button from "../components/Button";
 import { User, Mail, Lock, Eye, EyeOff, Fingerprint, Phone, Save, LogOut } from "lucide-react";
-import MessageBox from "../components/MessageBox";
+import { showNotification } from "../utils/notification"; // 1. Importamos nuestra utilidad
 
 export default function ProfileScreen() {
   const [nombre, setNombre] = useState("");
@@ -61,6 +61,13 @@ export default function ProfileScreen() {
 
         // 4. Actualizar el estado global con los nuevos datos del usuario y el token
         dispatch(signinAction(updatedUserData));
+
+        // 5. Mostrar notificación de éxito
+        showNotification({
+          type: "success",
+          title: "Perfil Actualizado",
+          text: "Tu información ha sido guardada correctamente.",
+        });
       } catch (err) {
         console.error("Fallo al actualizar el perfil:", err);
       }
@@ -82,13 +89,13 @@ export default function ProfileScreen() {
         ) : (
           <>
             {errorLoadingUser && (
-              <MessageBox variant="danger">{errorLoadingUser.data?.message || "Error al cargar el perfil"}</MessageBox>
+              <p className="signin-error">{errorLoadingUser.data?.message || "Error al cargar el perfil"}</p>
             )}
-            {errorUpdate && (
-              <MessageBox variant="danger">{errorUpdate.data?.message || "Error al actualizar"}</MessageBox>
-            )}
-            {message && <MessageBox variant="danger">{message}</MessageBox>}
-            {successUpdate && <MessageBox variant="success">Perfil actualizado correctamente</MessageBox>}
+            {errorUpdate && <p className="signin-error">{errorUpdate.data?.message || "Error al actualizar"}</p>}
+            {message && <p className="signin-error">{message}</p>}
+            {/* Ya no necesitamos el mensaje de éxito aquí, lo maneja la notificación */}
+            {/* {successUpdate && <MessageBox variant="success">Perfil actualizado correctamente</MessageBox>} */}
+
             <div className="input-group">
               <User className="input-icon" />
               <input

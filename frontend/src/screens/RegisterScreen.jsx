@@ -4,8 +4,9 @@ import { Link, useLocation, useNavigate } from "react-router";
 import { useRegisterUserMutation } from "../api/usersApi";
 import Button from "../components/Button";
 import { userSignin as signinAction } from "../slices/userSlice";
+import useCedulaValidation from "../hooks/useCedulaValidation"; // Importamos el hook
 import { User, Mail, Lock, Eye, EyeOff, LogIn, Phone, Fingerprint } from "lucide-react";
-import logo from "../assets/logo.jpg";
+import { showNotification } from "../utils/notification"; // 1. Importamos nuestra utilidad
 
 export default function RegisterScreen() {
   const navigate = useNavigate();
@@ -24,6 +25,8 @@ export default function RegisterScreen() {
   const redirectInUrl = new URLSearchParams(search).get("redirect");
   const redirect = redirectInUrl ? redirectInUrl : "/";
 
+  const validateCedula = useCedulaValidation(); // Instanciamos el validador
+
   const dispatch = useDispatch();
 
   // 1. Usar el hook de la mutación de registro
@@ -34,6 +37,13 @@ export default function RegisterScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    // Validamos la cédula antes de continuar
+    const cedulaError = validateCedula(cedula);
+    if (cedulaError) {
+      setMessage(cedulaError);
+      return;
+    }
     if (password !== confirmPassword) {
       setMessage("Las contraseñas no coinciden");
       return;
@@ -47,8 +57,19 @@ export default function RegisterScreen() {
       dispatch(signinAction(userData));
       navigate(redirect);
     } catch (err) {
-      // El error es manejado por el estado 'error' del hook.
-      // El `unwrap` lanza el error que es capturado aquí.
+      // 2. Verificamos si el error es por correo duplicado
+      const errorMessage = err.data?.message || "Ocurrió un error inesperado.";
+      if (errorMessage.includes("duplicate key") || errorMessage.includes("E11000")) {
+        showNotification({
+          type: "error",
+          title: "Correo ya registrado",
+          text: "El correo electrónico que ingresaste ya está en uso. Por favor, intenta con otro.",
+        });
+      } else {
+        // Si es otro tipo de error, lo mostramos en el mensaje genérico
+        setMessage(errorMessage);
+      }
+      // El error general sigue siendo manejado por el estado 'error' del hook.
       console.error("Fallo al registrar:", err);
     }
   };
@@ -134,7 +155,8 @@ export default function RegisterScreen() {
         </div>
 
         {/* 5. Mostrar el error de la API o el de validación local */}
-        {(error || message) && <p className="signin-error">{error?.data?.message || message}</p>}
+        {/* Ahora solo mostramos el estado 'message', que controlamos manualmente */}
+        {message && <p className="signin-error">{message}</p>}
 
         <div className="form-actions">
           <Button type="submit" size="large" disabled={isLoading} className="btn-with-icon">
