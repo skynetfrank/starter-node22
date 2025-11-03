@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { X, Search, Check, UserCheck } from "lucide-react";
-import { useLazyGetClienteByRifQuery } from "../api/clientesApi";
+import { X, Search, Check, UserCheck, Save } from "lucide-react";
+import { useLazyGetClienteByRifQuery, useAddClienteMutation } from "../api/clientesApi";
+import Swal from "sweetalert2";
 import useCedulaValidation from "../hooks/useCedulaValidation";
 import Button from "./Button";
 import MessageBox from "./MessageBox";
@@ -16,9 +17,17 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
   const [rif, setRif] = useState("");
   const [validationError, setValidationError] = useState(null);
   const [foundClient, setFoundClient] = useState(null);
+  // Nuevos estados para el formulario de creación
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newClientData, setNewClientData] = useState({
+    nombre: "",
+    direccion: "",
+    celular: "",
+  });
 
   const validateCedula = useCedulaValidation();
-  const [triggerSearch, { data, error, isLoading, isFetching, reset }] = useLazyGetClienteByRifQuery();
+  const [triggerSearch, { data, error, isLoading, isFetching, reset: resetSearch }] = useLazyGetClienteByRifQuery();
+  const [addCliente, { isLoading: isCreating, isSuccess: isCreateSuccess, data: createdClient }] = useAddClienteMutation();
 
   // Limpiar el estado interno cuando el modal se cierra
   useEffect(() => {
@@ -27,28 +36,64 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
         setRif("");
         setValidationError(null);
         setFoundClient(null);
+        setShowCreateForm(false);
+        setNewClientData({ nombre: "", direccion: "", celular: "" });
       }, 300); // Espera a que la animación de cierre termine
     }
   }, [isOpen]);
 
   // Manejar la respuesta de la API
   useEffect(() => {
-    if (data) {
-      setFoundClient(data);
-      setValidationError(null);
+    const handleResponse = async () => {
+      if (data) {
+        setFoundClient(data);
+        setValidationError(null);
+        setShowCreateForm(false); // Ocultar formulario si se encuentra un cliente
+      }
+      if (error) {
+        setFoundClient(null);
+        // Usar SweetAlert2 para una confirmación más elegante
+        const result = await Swal.fire({
+          title: "Cliente no encontrado",
+          text: `¿Deseas agregar un nuevo cliente con el RIF "${rif.toUpperCase()}"?`,
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Sí, crear nuevo",
+          cancelButtonText: "Cancelar",
+          customClass: {
+            popup: 'swal2-custom-popup',
+            confirmButton: 'swal2-custom-confirm',
+            cancelButton: 'swal2-custom-cancel'
+          }
+        });
+        if (result.isConfirmed) {
+          setShowCreateForm(true);
+        }
+      }
+    };
+    handleResponse();
+  }, [data, error, rif]);
+
+  // Manejar la respuesta de la creación de un nuevo cliente
+  useEffect(() => {
+    if (isCreateSuccess && createdClient) {
+      // Si la creación fue exitosa, enviar los datos al padre y cerrar.
+      onClientSelect({
+        nombre: createdClient.nombre,
+        rif: createdClient.rif,
+        direccion: createdClient.direccion,
+      });
+      onClose();
     }
-    if (error) {
-      setFoundClient(null);
-    }
-  }, [data, error]);
+  }, [isCreateSuccess, createdClient, onClientSelect, onClose]);
 
   const handleSearch = () => {
     setValidationError(null);
     setFoundClient(null);
+    setShowCreateForm(false);
 
     // 1. Reinicia el estado del hook de RTK Query a su estado inicial.
-    // Esto es crucial para que el useEffect se dispare en búsquedas subsecuentes del mismo RIF.
-    reset();
+    resetSearch();
 
     const cedulaError = validateCedula(rif);
     if (cedulaError) {
@@ -57,6 +102,16 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
     }
     // 2. Dispara la búsqueda. Ya no es necesario el segundo argumento `false`.
     triggerSearch(rif.toUpperCase());
+  };
+
+  const handleCreateClient = async () => {
+    if (!newClientData.nombre || !newClientData.direccion) {
+      alert("El nombre y la dirección son obligatorios.");
+      return;
+    }
+    await addCliente({
+      rif: rif.toUpperCase(), ...newClientData,
+    });
   };
 
   const handleConfirm = () => {
@@ -74,13 +129,20 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
     setRif("");
     setValidationError(null);
     setFoundClient(null);
+    setShowCreateForm(false);
+    setNewClientData({ nombre: "", direccion: "", celular: "" });
+  };
+
+  const handleNewClientDataChange = (e) => {
+    const { name, value } = e.target;
+    setNewClientData((prev) => ({ ...prev, [name]: value }));
   };
 
   if (!isOpen) {
     return null;
   }
 
-  const isSearching = isLoading || isFetching;
+  const isSearching = isLoading || isFetching || isCreating;
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -92,7 +154,7 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
           </button>
         </div>
         <div className="modal-body">
-          {!foundClient && (
+          {!foundClient && !showCreateForm && (
             <div className="search-input-group">
               <input
                 type="text"
@@ -109,21 +171,53 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
           )}
 
           {validationError && <MessageBox variant="danger">{validationError}</MessageBox>}
-          {error && <MessageBox variant="danger">{error.data?.message || "Cliente no encontrado."}</MessageBox>}
+
+          {/* Formulario de creación de cliente */}
+          {showCreateForm && (
+            <div className="create-form-card">
+              <h4>Nuevo Cliente</h4>
+              <div className="form-group">
+                <label>RIF</label>
+                <input type="text" value={rif.toUpperCase()} readOnly className="form-input-readonly" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" value={newClientData.nombre} onChange={handleNewClientDataChange} className="form-input" required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="direccion">Dirección</label>
+                <input type="text" id="direccion" name="direccion" value={newClientData.direccion} onChange={handleNewClientDataChange} className="form-input" required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="celular">Teléfono (Opcional)</label>
+                <input type="text" id="celular" name="celular" value={newClientData.celular} onChange={handleNewClientDataChange} className="form-input" />
+              </div>
+            </div>
+          )}
 
           {foundClient && (
             <div className="client-found-card">
               <div className="client-found-header">
                 <UserCheck className="client-found-icon" size={28} />
-                <p className="client-name"><strong>{foundClient.nombre} RIF: {foundClient.rif}</strong> </p>
+                <h4>Cliente Encontrado</h4>
               </div>
+              <p className="client-name">{foundClient.nombre}</p>
+              <p className="client-detail"><strong>RIF:</strong> {foundClient.rif}</p>
               <p className="client-detail"><strong>Dirección:</strong> {foundClient.direccion}</p>
-              <p className="confirmation-question">¿Es este el cliente que buscas?</p>
+              <p className="confirmation-question">¿Es este el cliente correcto?</p>
             </div>
           )}
         </div>
         <div className="modal-footer">
-          {foundClient ? (
+          {showCreateForm ? (
+            <>
+              <Button onClick={() => setShowCreateForm(false)} className="btn-secondary">Cancelar</Button>
+              <Button onClick={handleCreateClient} disabled={isCreating} className="btn-primary btn-with-icon">
+                {isCreating ? <div className="spinner-small"></div> : <Save size={18} />}
+                <span>Guardar Cliente</span>
+              </Button>
+            </>
+          ) : foundClient ? (
             <>
               <Button onClick={handleReset} className="btn-secondary">
                 Buscar Otro
