@@ -4,7 +4,7 @@ function HomeScreen() {
   return (
     <>
       {/* Renderizamos la pantalla de demostración del cargador de imágenes. */}
-      <ImageUploaderScreen />
+      <h1>STARTER NODEJS-22</h1>
     </>
   );
 }

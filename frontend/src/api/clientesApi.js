@@ -34,6 +34,12 @@ export const clientesApi = createApi({
             providesTags: (result, error, id) => [{ type: "Clientes", id }],
         }),
 
+    // Endpoint para buscar un cliente por su RIF. No se cachea con tags
+    // porque es una búsqueda puntual y no una lista que necesite invalidación.
+    getClienteByRif: build.query({
+      query: (rif) => `clientes/rif/${rif}`,
+    }),
+
         // Endpoint para crear un nuevo cliente
         addCliente: build.mutation({
             query: (newCliente) => ({
@@ -75,6 +81,7 @@ export const clientesApi = createApi({
 export const {
     useGetClientesQuery,
     useGetClienteQuery,
+  useLazyGetClienteByRifQuery, // Exportamos el hook LAZY para búsquedas bajo demanda
     useAddClienteMutation,
     useUpdateClienteMutation,
     useDeleteClienteMutation,
