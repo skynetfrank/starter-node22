@@ -1519,7 +1519,8 @@ footer {
 }
 
 .clientes-header h1 {
-  font-size: 1.875rem; /* 30px */
+  font-size: 1.875rem;
+  /* 30px */
   font-weight: 700;
 }
 
@@ -1533,12 +1534,14 @@ footer {
   left: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #9ca3af; /* Gris neutral */
+  color: #9ca3af;
+  /* Gris neutral */
 }
 
 .search-bar-wrapper input {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.75rem; /* Espacio para el ícono */
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  /* Espacio para el ícono */
   border-radius: 8px;
   border: 1px solid var(--border-color);
   background-color: var(--background-color);
@@ -1568,7 +1571,8 @@ footer {
 }
 
 .clientes-table-actions .btn-delete {
-  color: #ef4444; /* Rojo */
+  color: #ef4444;
+  /* Rojo */
 }
 
 .clientes-table-actions .btn-delete:hover:not(:disabled) {
@@ -1596,13 +1600,17 @@ footer {
 }
 
 /* Clases para responsividad de la tabla */
-@media (max-width: 768px) { /* 'md' breakpoint */
+@media (max-width: 768px) {
+
+  /* 'md' breakpoint */
   .responsive-hide-md {
     display: none;
   }
 }
 
-@media (max-width: 640px) { /* 'sm' breakpoint */
+@media (max-width: 640px) {
+
+  /* 'sm' breakpoint */
   .responsive-hide-sm {
     display: none;
   }
@@ -1623,7 +1631,8 @@ footer {
    ========================================================================== */
 
 .cliente-form-container {
-  max-width: 48rem; /* 768px */
+  max-width: 48rem;
+  /* 768px */
   margin: 0 auto;
   padding: 1rem 1.5rem;
 }
@@ -1636,7 +1645,8 @@ footer {
 }
 
 .cliente-form-header h1 {
-  font-size: 1.875rem; /* 30px */
+  font-size: 1.875rem;
+  /* 30px */
   font-weight: 700;
 }
 
@@ -1729,6 +1739,7 @@ footer {
     transform: translateY(30px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -1740,7 +1751,7 @@ footer {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: 1rem;
+
 }
 
 .modal-header h3 {
@@ -1806,18 +1817,47 @@ footer {
 
 .client-found-card {
   background-color: var(--color-secondary);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1rem;
-  border: 1px solid var(--border-color);
+  border-left: 5px solid var(--color-tertiary);
+  animation: fadeIn 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.client-found-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-color);
+}
+
+.client-found-icon {
+  color: var(--color-tertiary);
+  flex-shrink: 0;
 }
 
 .client-found-card h4 {
   margin-top: 0;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0;
+  font-weight: 600;
 }
 
-.client-found-card p {
+.client-name {
+  font-size: 1.25rem;
+  font-weight: 700;
   margin: 0.25rem 0;
+}
+
+.client-detail {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-left: 2.5rem;
+}
+
+.client-detail strong {
+  color: var(--text-color);
 }
 
 .confirmation-question {
@@ -1836,13 +1876,17 @@ footer {
 
 /* Modificador para botones que solo contienen un ícono */
 .btn-icon-only {
-  padding: 0.75rem; /* Padding igual en todos los lados */
-  width: 44px; /* Ancho fijo */
-  height: 44px; /* Alto fijo */
+  padding: 0.75rem;
+  /* Padding igual en todos los lados */
+  width: 44px;
+  /* Ancho fijo */
+  height: 44px;
+  /* Alto fijo */
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-shrink: 0; /* Evita que el botón se encoja en un contenedor flex */
+  flex-shrink: 0;
+  /* Evita que el botón se encoja en un contenedor flex */
 }
 
 /* Asegurarse que el spinner pequeño se centre dentro del botón de ícono */

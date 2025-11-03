@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { X, Search, Check, UserPlus } from "lucide-react";
+import { X, Search, Check, UserCheck } from "lucide-react";
 import { useLazyGetClienteByRifQuery } from "../api/clientesApi";
 import useCedulaValidation from "../hooks/useCedulaValidation";
 import Button from "./Button";
@@ -108,11 +108,12 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
 
           {foundClient && (
             <div className="client-found-card">
-              <h4>Cliente Encontrado</h4>
-              <p><strong>Nombre:</strong> {foundClient.nombre}</p>
-              <p><strong>RIF:</strong> {foundClient.rif}</p>
-              <p><strong>Dirección:</strong> {foundClient.direccion}</p>
-              <p className="confirmation-question">¿Es este el cliente correcto?</p>
+              <div className="client-found-header">
+                <UserCheck className="client-found-icon" size={28} />
+                <p className="client-name"><strong>{foundClient.nombre} RIF: {foundClient.rif}</strong> </p>
+              </div>
+              <p className="client-detail"><strong>Dirección:</strong> {foundClient.direccion}</p>
+              <p className="confirmation-question">¿Es este el cliente que buscas?</p>
             </div>
           )}
         </div>
