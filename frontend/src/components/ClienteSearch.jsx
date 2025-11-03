@@ -97,7 +97,7 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
                 disabled={isSearching}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
               />
-              <Button onClick={handleSearch} disabled={isSearching || !rif} className="btn-primary">
+              <Button onClick={handleSearch} disabled={isSearching || !rif} className="btn-primary btn-icon-only">
                 {isSearching ? <div className="spinner-small"></div> : <Search size={20} />}
               </Button>
             </div>

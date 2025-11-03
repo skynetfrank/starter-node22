@@ -1833,3 +1833,19 @@ footer {
   border-top: 1px solid var(--border-color);
   padding-top: 1rem;
 }
+
+/* Modificador para botones que solo contienen un ícono */
+.btn-icon-only {
+  padding: 0.75rem; /* Padding igual en todos los lados */
+  width: 44px; /* Ancho fijo */
+  height: 44px; /* Alto fijo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0; /* Evita que el botón se encoja en un contenedor flex */
+}
+
+/* Asegurarse que el spinner pequeño se centre dentro del botón de ícono */
+.btn-icon-only .spinner-small {
+  margin: auto;
+}
