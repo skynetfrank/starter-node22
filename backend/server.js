@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import userRouter from "./routers/userRouter.js";
+import clienteRouter from "./routers/clienteRouter.js";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/users", userRouter);
+app.use("/api/clientes", clienteRouter);
 
 const __dirname = path.resolve();
 
