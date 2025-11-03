@@ -376,7 +376,7 @@ footer {
   background-color: var(--color-primary);
 }
 
-.form > div {
+.form>div {
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
@@ -1279,11 +1279,14 @@ footer {
   padding: 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   border: 1px solid var(--border-color);
-  margin-top: 1rem; /* Espacio entre el uploader y los resultados */
+  margin-top: 1rem;
+  /* Espacio entre el uploader y los resultados */
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centra el contenido horizontalmente */
-  gap: 1.5rem; /* Espacio entre los bloques de contenido */
+  align-items: center;
+  /* Centra el contenido horizontalmente */
+  gap: 1.5rem;
+  /* Espacio entre los bloques de contenido */
 }
 
 .upload-progress-bar-container {
@@ -1302,11 +1305,13 @@ footer {
   width: 100%;
   height: 10px;
   border-radius: 5px;
-  appearance: none; /* Elimina estilos por defecto del navegador */
+  appearance: none;
+  /* Elimina estilos por defecto del navegador */
   -webkit-appearance: none;
   -moz-appearance: none;
   border: none;
-  background-color: var(--color-secondary); /* Fondo de la barra */
+  background-color: var(--color-secondary);
+  /* Fondo de la barra */
 }
 
 /* Estilo para la barra de progreso rellenada */
@@ -1325,8 +1330,10 @@ footer {
 .main-image-display {
   text-align: center;
   width: 100%;
-  max-width: 150px; /* Un tamaño más generoso para la imagen principal */
-  margin: 0 auto; /* Centra el bloque */
+  max-width: 150px;
+  /* Un tamaño más generoso para la imagen principal */
+  margin: 0 auto;
+  /* Centra el bloque */
 }
 
 .main-image-title {
@@ -1339,9 +1346,11 @@ footer {
 .main-uploaded-image {
   width: 150px;
   height: 150px;
-  border: 2px solid var(--color-tertiary); /* Borde distintivo */
+  border: 2px solid var(--color-tertiary);
+  /* Borde distintivo */
   border-radius: 8px;
-  object-fit: contain; /* Asegura que la imagen se ajuste sin recortarse */
+  object-fit: contain;
+  /* Asegura que la imagen se ajuste sin recortarse */
   margin-bottom: 0.5rem;
 }
 
@@ -1370,27 +1379,35 @@ footer {
 .thumbnails-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* Centra las miniaturas */
-  gap: 10px; /* Espacio entre miniaturas */
+  justify-content: center;
+  /* Centra las miniaturas */
+  gap: 10px;
+  /* Espacio entre miniaturas */
 }
 
 .uploaded-thumbnail {
-  width: 60px; /* Tamaño fijo como se solicitó */
+  width: 60px;
+  /* Tamaño fijo como se solicitó */
   height: 60px;
-  object-fit: cover; /* Recorta para llenar el espacio */
+  object-fit: cover;
+  /* Recorta para llenar el espacio */
   border: 1px solid var(--border-color);
   border-radius: 4px;
   transition: transform 0.2s ease;
 }
 
 .uploaded-thumbnail:hover {
-  transform: scale(1.05); /* Pequeño efecto al pasar el ratón */
+  transform: scale(1.05);
+  /* Pequeño efecto al pasar el ratón */
 }
 
 .upload-action-button {
-  margin-top: 1rem; /* Espacio encima del botón */
-  width: auto; /* Ajusta el ancho al contenido */
-  padding: 0.75rem 1.5rem; /* Más padding para un botón más prominente */
+  margin-top: 1rem;
+  /* Espacio encima del botón */
+  width: auto;
+  /* Ajusta el ancho al contenido */
+  padding: 0.75rem 1.5rem;
+  /* Más padding para un botón más prominente */
 }
 
 /* Ajustes responsivos */
@@ -1398,5 +1415,191 @@ footer {
   .upload-results-section {
     padding: 1rem;
   }
- 
+
+}
+
+/* ==========================================================================
+   17. ESTILOS PARA CLIENTES SCREEN
+   ========================================================================== */
+
+.clientes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.clientes-search-bar {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.clientes-search-bar input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  /* Espacio para el ícono de búsqueda */
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.clientes-search-bar input:focus {
+  outline: none;
+  border-color: var(--color-tertiary);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  /* Usando el color azul de bootstrap como referencia */
+}
+
+.clientes-table-container {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background-color: var(--color-primary);
+}
+
+.clientes-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.clientes-table thead tr {
+  background-color: var(--color-secondary);
+}
+
+.clientes-table th,
+.clientes-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.clientes-table tbody tr:last-of-type td {
+  border-bottom: none;
+}
+
+.clientes-table tbody tr:hover {
+  background-color: var(--color-secondary);
+}
+
+.clientes-table-actions {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ==========================================================================
+   18. ESTILOS PARA CLIENTES SCREEN (CSS PURO)
+   ========================================================================== */
+
+.clientes-screen-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+}
+
+.clientes-header h1 {
+  font-size: 1.875rem; /* 30px */
+  font-weight: 700;
+}
+
+.search-bar-wrapper {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.search-bar-wrapper .search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af; /* Gris neutral */
+}
+
+.search-bar-wrapper input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem; /* Espacio para el ícono */
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-bar-wrapper input:focus {
+  outline: none;
+  border-color: var(--color-tertiary);
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.clientes-table-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+  color: var(--color-tertiary);
+}
+
+.clientes-table-actions button:hover:not(:disabled) {
+  background-color: var(--color-secondary);
+}
+
+.clientes-table-actions .btn-delete {
+  color: #ef4444; /* Rojo */
+}
+
+.clientes-table-actions .btn-delete:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.clientes-table-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.clientes-table th:last-child,
+.clientes-table td:last-child {
+  text-align: center;
+}
+
+.fetching-indicator {
+  text-align: center;
+  padding: 1rem;
+  color: #6c757d;
+}
+
+[data-theme="dark"] .fetching-indicator {
+  color: #adb5bd;
+}
+
+/* Clases para responsividad de la tabla */
+@media (max-width: 768px) { /* 'md' breakpoint */
+  .responsive-hide-md {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) { /* 'sm' breakpoint */
+  .responsive-hide-sm {
+    display: none;
+  }
+
+  .clientes-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .clientes-header h1 {
+    text-align: center;
+  }
 }

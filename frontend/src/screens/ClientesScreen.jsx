@@ -59,23 +59,22 @@ const ClientesScreen = () => {
     const { clientes, pages: totalPages } = data || { clientes: [], pages: 1 };
 
     return (
-        <div className="container mx-auto p-4">
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold">Gestión de Clientes</h1>
+        <div className="clientes-screen-container">
+            <div className="clientes-header">
+                <h1>Gestión de Clientes</h1>
                 <Button onClick={handleCreate} className="btn-primary btn-with-icon">
                     <Plus size={18} />
                     <span>Crear Cliente</span>
                 </Button>
             </div>
 
-            <div className="mb-4 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <div className="search-bar-wrapper">
+                <Search className="search-icon" size={20} />
                 <input
                     type="text"
                     placeholder="Buscar por nombre, RIF o email..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border rounded-lg"
                 />
             </div>
 
@@ -85,29 +84,27 @@ const ClientesScreen = () => {
                 <MessageBox variant="danger">{error?.data?.message || "Error al cargar los clientes"}</MessageBox>
             ) : (
                 <>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full bg-white border">
-                            <thead className="bg-gray-100">
+                    <div className="clientes-table-container">
+                        <table className="clientes-table">
+                            <thead>
                                 <tr>
-                                    <th className="py-2 px-4 border-b text-left">RIF</th>
-                                    <th className="py-2 px-4 border-b text-left">Nombre</th>
-                                    <th className="py-2 px-4 border-b text-left hidden md:table-cell">Email</th>
-                                    <th className="py-2 px-4 border-b text-left hidden sm:table-cell">Celular</th>
-                                    <th className="py-2 px-4 border-b text-center">Acciones</th>
+                                    <th>RIF</th>
+                                    <th>Nombre</th>
+                                    <th className="responsive-hide-sm">Telefono</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {clientes.map((cliente) => (
-                                    <tr key={cliente._id} className="hover:bg-gray-50">
-                                        <td className="py-2 px-4 border-b">{cliente.rif}</td>
-                                        <td className="py-2 px-4 border-b">{cliente.nombre}</td>
-                                        <td className="py-2 px-4 border-b hidden md:table-cell">{cliente.email}</td>
-                                        <td className="py-2 px-4 border-b hidden sm:table-cell">{cliente.celular}</td>
-                                        <td className="py-2 px-4 border-b text-center">
-                                            <button onClick={() => handleEdit(cliente._id)} className="text-blue-500 hover:text-blue-700 p-2">
+                                    <tr key={cliente._id}>
+                                        <td>{cliente.rif}</td>
+                                        <td>{cliente.nombre}</td>
+                                        <td className="responsive-hide-sm">{cliente.celular}</td>
+                                        <td className="clientes-table-actions">
+                                            <button onClick={() => handleEdit(cliente._id)} title="Editar Cliente">
                                                 <Edit size={18} />
                                             </button>
-                                            <button onClick={() => handleDelete(cliente._id)} className="text-red-500 hover:text-red-700 p-2" disabled={deleteState.isLoading}>
+                                            <button onClick={() => handleDelete(cliente._id)} className="btn-delete" title="Eliminar Cliente" disabled={deleteState.isLoading}>
                                                 <Trash2 size={18} />
                                             </button>
                                         </td>
@@ -117,18 +114,18 @@ const ClientesScreen = () => {
                         </table>
                     </div>
 
-                    {isFetching && <div className="text-center p-4">Actualizando...</div>}
+                    {isFetching && <div className="fetching-indicator">Actualizando...</div>}
 
-                    <div className="flex justify-between items-center mt-4">
-                        <Button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1 || isFetching}>
+                    <div className="pagination-container">
+                        <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1 || isFetching} className="pagination-button">
                             Anterior
-                        </Button>
-                        <span>
+                        </button>
+                        <span className="pagination-info">
                             Página {page} de {totalPages}
                         </span>
-                        <Button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages || isFetching}>
+                        <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages || isFetching} className="pagination-button">
                             Siguiente
-                        </Button>
+                        </button>
                     </div>
                 </>
             )}
