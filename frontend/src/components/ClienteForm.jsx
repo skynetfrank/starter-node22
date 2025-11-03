@@ -87,35 +87,35 @@ const ClienteForm = () => {
     if (loadError) return <MessageBox variant="danger">{loadError?.data?.message || "Error al cargar datos del cliente"}</MessageBox>;
 
     return (
-        <div className="container mx-auto p-4 max-w-2xl">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">{isEditMode ? "Editar Cliente" : "Crear Nuevo Cliente"}</h1>
+    <div className="cliente-form-container">
+      <div className="cliente-form-header">
+        <h1>{isEditMode ? "Editar Cliente" : "Crear Nuevo Cliente"}</h1>
                 <Button onClick={() => navigate("/clientes")} className="btn-secondary btn-with-icon">
                     <ArrowLeft size={18} />
                     <span>Volver</span>
                 </Button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg shadow-md">
+      <form onSubmit={handleSubmit} className="cliente-form-card">
                 {Object.keys(formData).map((key) => (
-                    <div key={key}>
-                        <label htmlFor={key} className="block text-sm font-medium text-gray-700 capitalize">
+          <div key={key} className="form-group">
+            <label htmlFor={key} className="form-label">
                             {key}
                         </label>
                         <input
                             type={key === "email" ? "email" : "text"}
                             id={key}
                             name={key}
+              className="form-input"
                             value={formData[key]}
                             onChange={handleChange}
                             required={["nombre", "rif", "direccion"].includes(key)}
                             maxLength={key === "rif" ? 10 : undefined}
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                         />
                     </div>
                 ))}
 
-                <div className="flex justify-end">
+        <div className="cliente-form-actions">
                     <Button type="submit" disabled={isLoading} className="btn-primary btn-with-icon">
                         {isLoading ? <div className="spinner"></div> : <Save size={18} />}
                         <span>{isLoading ? "Guardando..." : isEditMode ? "Guardar Cambios" : "Crear Cliente"}</span>
