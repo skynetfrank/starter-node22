@@ -11,6 +11,8 @@ import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import HomeScreen from "./screens/HomeScreen";
 import UnderConstruction from "./components/UnderConstruction";
+import ClientesScreen from './screens/ClientesScreen';
+import ClienteEditScreen from './screens/ClienteEditScreen'; // O importa ClienteForm directamente
 
 
 const router = createBrowserRouter(
@@ -21,9 +23,12 @@ const router = createBrowserRouter(
       <Route path="/register" element={<RegisterScreen />}></Route>
       <Route path="" element={<ProtectedRoute />}>
         <Route path="/profile" element={<ProfileScreen />}></Route>
+        <Route path="/clientes" element={<ClientesScreen />} />
+        <Route path="/clientes/nuevo" element={<ClienteEditScreen />} /> {/* Ruta para crear */}
+        <Route path="/clientes/:id/edit" element={<ClienteEditScreen />} /> {/* Ruta para editar */}
       </Route>
       <Route path="/enconstruccion" element={<UnderConstruction />}></Route>
-   
+
     </Route>
   )
 );
