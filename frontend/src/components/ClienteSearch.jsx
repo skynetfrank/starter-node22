@@ -37,6 +37,7 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
         setValidationError(null);
         setFoundClient(null);
         setShowCreateForm(false);
+        resetSearch(); // 1. Limpiar el estado de RTK Query al cerrar
         setNewClientData({ nombre: "", direccion: "", celular: "" });
       }, 300); // Espera a que la animación de cierre termine
     }
@@ -45,13 +46,16 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
   // Manejar la respuesta de la API
   useEffect(() => {
     const handleResponse = async () => {
+      // Solo procesar si no hay una búsqueda activa
+      if (isLoading || isFetching) return;
+
       if (data) {
         setFoundClient(data);
         setValidationError(null);
         setShowCreateForm(false); // Ocultar formulario si se encuentra un cliente
       }
       if (error) {
-        setFoundClient(null);
+        // El estado de foundClient ya se resetea en handleSearch
         // Usar SweetAlert2 para una confirmación más elegante
         const result = await Swal.fire({
           title: "Cliente no encontrado",
@@ -72,7 +76,7 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
       }
     };
     handleResponse();
-  }, [data, error, rif]);
+  }, [data, error, isLoading, isFetching]); // 2. Ajustar dependencias
 
   // Manejar la respuesta de la creación de un nuevo cliente
   useEffect(() => {
@@ -130,6 +134,7 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
     setValidationError(null);
     setFoundClient(null);
     setShowCreateForm(false);
+    resetSearch(); // 3. Limpiar el estado de RTK Query al resetear
     setNewClientData({ nombre: "", direccion: "", celular: "" });
   };
 
