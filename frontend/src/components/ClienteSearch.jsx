@@ -111,7 +111,16 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
 
   const handleCreateClient = async () => {
     if (!newClientData.nombre || !newClientData.direccion) {
-      alert("El nombre y la dirección son obligatorios.");
+      Swal.fire({
+        title: "Campos incompletos",
+        text: "El nombre y la dirección son obligatorios.",
+        icon: "warning",
+        confirmButtonText: "Aceptar",
+        customClass: {
+          popup: "swal2-custom-popup",
+          confirmButton: "swal2-custom-confirm",
+        },
+      });
       return;
     }
     await addCliente({
