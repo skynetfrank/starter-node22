@@ -1935,8 +1935,7 @@ footer {
 .create-form-card .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-}
+ }
 
 .create-form-card .form-label {
   font-size: 0.85rem;

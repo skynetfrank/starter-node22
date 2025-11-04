@@ -27,7 +27,8 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
 
   const validateCedula = useCedulaValidation();
   const [triggerSearch, { data, error, isLoading, isFetching, reset: resetSearch }] = useLazyGetClienteByRifQuery();
-  const [addCliente, { isLoading: isCreating, isSuccess: isCreateSuccess, data: createdClient }] = useAddClienteMutation();
+  const [addCliente, { isLoading: isCreating, isSuccess: isCreateSuccess, data: createdClient }] =
+    useAddClienteMutation();
 
   // Limpiar el estado interno cuando el modal se cierra
   useEffect(() => {
@@ -65,10 +66,10 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
           confirmButtonText: "Sí, crear nuevo",
           cancelButtonText: "Cancelar",
           customClass: {
-            popup: 'swal2-custom-popup',
-            confirmButton: 'swal2-custom-confirm',
-            cancelButton: 'swal2-custom-cancel'
-          }
+            popup: "swal2-custom-popup",
+            confirmButton: "swal2-custom-confirm",
+            cancelButton: "swal2-custom-cancel",
+          },
         });
         if (result.isConfirmed) {
           setShowCreateForm(true);
@@ -114,7 +115,8 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
       return;
     }
     await addCliente({
-      rif: rif.toUpperCase(), ...newClientData,
+      rif: rif.toUpperCase(),
+      ...newClientData,
     });
   };
 
@@ -153,7 +155,8 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h3>Buscar Cliente</h3>
+          {showCreateForm ? <h3>Crear Nuevo Cliente - RIF: {rif.toUpperCase()}</h3> : <h3>Buscar Cliente </h3>}
+
           <button onClick={onClose} className="modal-close-btn">
             <X size={24} />
           </button>
@@ -167,7 +170,7 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
                 value={rif}
                 onChange={(e) => setRif(e.target.value)}
                 disabled={isSearching}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
               />
               <Button onClick={handleSearch} disabled={isSearching || !rif} className="btn-primary btn-icon-only">
                 {isSearching ? <div className="spinner-small"></div> : <Search size={20} />}
@@ -180,22 +183,40 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
           {/* Formulario de creación de cliente */}
           {showCreateForm && (
             <div className="create-form-card">
-              <h4>Nuevo Cliente</h4>
-              <div className="form-group">
-                <label>RIF</label>
-                <input type="text" value={rif.toUpperCase()} readOnly className="form-input-readonly" />
-              </div>
               <div className="form-group">
                 <label htmlFor="nombre">Nombre</label>
-                <input type="text" id="nombre" name="nombre" value={newClientData.nombre} onChange={handleNewClientDataChange} className="form-input" required />
+                <input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  value={newClientData.nombre}
+                  onChange={handleNewClientDataChange}
+                  className="form-input"
+                  required
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="direccion">Dirección</label>
-                <input type="text" id="direccion" name="direccion" value={newClientData.direccion} onChange={handleNewClientDataChange} className="form-input" required />
+                <input
+                  type="text"
+                  id="direccion"
+                  name="direccion"
+                  value={newClientData.direccion}
+                  onChange={handleNewClientDataChange}
+                  className="form-input"
+                  required
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="celular">Teléfono (Opcional)</label>
-                <input type="text" id="celular" name="celular" value={newClientData.celular} onChange={handleNewClientDataChange} className="form-input" />
+                <input
+                  type="text"
+                  id="celular"
+                  name="celular"
+                  value={newClientData.celular}
+                  onChange={handleNewClientDataChange}
+                  className="form-input"
+                />
               </div>
             </div>
           )}
@@ -207,8 +228,12 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
                 <h4>Cliente Encontrado</h4>
               </div>
               <p className="client-name">{foundClient.nombre}</p>
-              <p className="client-detail"><strong>RIF:</strong> {foundClient.rif}</p>
-              <p className="client-detail"><strong>Dirección:</strong> {foundClient.direccion}</p>
+              <p className="client-detail">
+                <strong>RIF:</strong> {foundClient.rif}
+              </p>
+              <p className="client-detail">
+                <strong>Dirección:</strong> {foundClient.direccion}
+              </p>
               <p className="confirmation-question">¿Es este el cliente correcto?</p>
             </div>
           )}
@@ -216,7 +241,9 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
         <div className="modal-footer">
           {showCreateForm ? (
             <>
-              <Button onClick={() => setShowCreateForm(false)} className="btn-secondary">Cancelar</Button>
+              <Button onClick={() => setShowCreateForm(false)} className="btn-secondary">
+                Cancelar
+              </Button>
               <Button onClick={handleCreateClient} disabled={isCreating} className="btn-primary btn-with-icon">
                 {isCreating ? <div className="spinner-small"></div> : <Save size={18} />}
                 <span>Guardar Cliente</span>
