@@ -1992,3 +1992,128 @@ footer {
   background-color: var(--color-secondary) !important;
   color: var(--text-color) !important;
 }
+
+/* ==========================================================================
+   23. ESTILOS PARA COMPONENTE TOOLTIP
+   ========================================================================== */
+
+/* Contenedor principal del tooltip.
+   Es 'inline-block' para que ocupe solo el espacio de su contenido
+   y 'relative' para posicionar el texto del tooltip de forma absoluta. */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* El texto del tooltip (la "burbuja").
+   Inicialmente está oculto y se hace visible al hacer hover sobre el contenedor. */
+.tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  background-color: #2c3e50; /* Un color oscuro y moderno */
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 12px;
+  position: absolute;
+  z-index: 10;
+  white-space: nowrap; /* Evita que el texto se parta en varias líneas */
+  font-size: 0.875rem; /* 14px */
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Flecha del tooltip, creada con un pseudo-elemento. */
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  border-width: 5px;
+  border-style: solid;
+}
+
+/* Posicionamiento para 'top' (por defecto) */
+.tooltip-top {
+  bottom: 125%; /* Se posiciona arriba del elemento */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-top::after {
+  top: 100%; /* La flecha apunta hacia abajo */
+  left: 50%;
+  transform: translateX(-50%);
+  border-color: #2c3e50 transparent transparent transparent;
+}
+
+/* Posicionamiento para 'bottom' */
+.tooltip-bottom {
+  top: 125%; /* Se posiciona debajo del elemento */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip-bottom::after {
+  bottom: 100%; /* La flecha apunta hacia arriba */
+  left: 50%;
+  transform: translateX(-50%);
+  border-color: transparent transparent #2c3e50 transparent;
+}
+
+/* Posicionamiento para 'left' */
+.tooltip-left {
+  right: 125%; /* Se posiciona a la izquierda del elemento */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tooltip-left::after {
+  left: 100%; /* La flecha apunta hacia la derecha */
+  top: 50%;
+  transform: translateY(-50%);
+  border-color: transparent transparent transparent #2c3e50;
+}
+
+/* Posicionamiento para 'right' */
+.tooltip-right {
+  left: 125%; /* Se posiciona a la derecha del elemento */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.tooltip-right::after {
+  right: 100%; /* La flecha apunta hacia la izquierda */
+  top: 50%;
+  transform: translateY(-50%);
+  border-color: transparent #2c3e50 transparent transparent;
+}
+
+/* Estilos para el tema oscuro */
+[data-theme="dark"] .tooltip-text {
+  background-color: var(--color-secondary);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .tooltip-top::after {
+  border-color: var(--color-secondary) transparent transparent transparent;
+}
+
+[data-theme="dark"] .tooltip-bottom::after {
+  border-color: transparent transparent var(--color-secondary) transparent;
+}
+
+[data-theme="dark"] .tooltip-left::after {
+  border-color: transparent transparent transparent var(--color-secondary);
+}
+
+[data-theme="dark"] .tooltip-right::after {
+  border-color: transparent var(--color-secondary) transparent transparent;
+}
+
+/* Al pasar el cursor sobre el contenedor, el tooltip se hace visible. */
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+}

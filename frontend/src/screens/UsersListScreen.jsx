@@ -5,6 +5,7 @@ import { Plus, Search, Edit, Trash2 } from "lucide-react";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import Button from "../components/Button";
+import Tooltip from "../components/Tooltip";
 import useApiNotification from "../hooks/useApiNotification";
 
 const UsersListScreen = () => {
@@ -104,17 +105,20 @@ const UsersListScreen = () => {
                     <td>{user.isAdmin ? "Sí" : "No"}</td>
                     <td>{user.isActive ? "Sí" : "No"}</td>
                     <td className="clientes-table-actions">
-                      <button onClick={() => handleEdit(user._id)} title="Editar Usuario">
-                        <Edit size={18} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(user._id)}
-                        className="btn-delete"
-                        title="Desactivar Usuario"
-                        disabled={deleteState.isLoading}
-                      >
-                        <Trash2 size={18} />
-                      </button>
+                      <Tooltip text="Editar" position="left">
+                        <button onClick={() => handleEdit(user._id)}>
+                          <Edit size={18} />
+                        </button>
+                      </Tooltip>
+                      <Tooltip text="Desactivar" position="top">
+                        <button
+                          onClick={() => handleDelete(user._id)}
+                          className="btn-delete"
+                          disabled={deleteState.isLoading}
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </Tooltip>
                     </td>
                   </tr>
                 ))}
