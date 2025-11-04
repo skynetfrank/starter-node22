@@ -68,7 +68,7 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.flx{
+.flx {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -396,7 +396,7 @@ footer {
   background-color: var(--color-primary);
 }
 
-.form>div {
+.form > div {
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
@@ -1435,7 +1435,6 @@ footer {
   .upload-results-section {
     padding: 1rem;
   }
-
 }
 
 /* ==========================================================================
@@ -1532,7 +1531,6 @@ footer {
 
 .search-bar-wrapper {
   position: relative;
-
 }
 
 .search-bar-wrapper .search-icon {
@@ -1607,7 +1605,6 @@ footer {
 
 /* Clases para responsividad de la tabla */
 @media (max-width: 768px) {
-
   /* 'md' breakpoint */
   .responsive-hide-md {
     display: none;
@@ -1615,7 +1612,6 @@ footer {
 }
 
 @media (max-width: 640px) {
-
   /* 'sm' breakpoint */
   .responsive-hide-sm {
     display: none;
@@ -1757,7 +1753,6 @@ footer {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--border-color);
-
 }
 
 .modal-header h3 {
@@ -1941,7 +1936,7 @@ footer {
 .create-form-card .form-group {
   display: flex;
   flex-direction: column;
- }
+}
 
 .create-form-card .form-label {
   font-size: 0.85rem;
@@ -2115,5 +2110,4 @@ footer {
 .tooltip-container:hover .tooltip-text {
   visibility: visible;
   opacity: 1;
-}
 }
