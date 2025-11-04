@@ -155,7 +155,7 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          {showCreateForm ? <h3>Crear Nuevo Cliente - RIF: {rif.toUpperCase()}</h3> : <h3>Buscar Cliente </h3>}
+          {showCreateForm ? <h4>CREAR NUEVO CLIENTE - RIF: {rif.toUpperCase()}</h4> : <h4>Buscar Cliente </h4>}
 
           <button onClick={onClose} className="modal-close-btn">
             <X size={24} />
