@@ -11,8 +11,26 @@ userRouter.get(
   isAuth,
   isAdmin,
   expressAsyncHandler(async (req, res) => {
-    const users = await User.find({});
-    res.send(users);
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const search = req.query.search || "";
+
+    const searchQuery = search
+      ? {
+          $or: [
+            { nombre: { $regex: search, $options: "i" } },
+            { email: { $regex: search, $options: "i" } },
+            { cedula: { $regex: search, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const count = await User.countDocuments(searchQuery);
+    const users = await User.find(searchQuery)
+      .skip(limit * (page - 1))
+      .limit(limit);
+
+    res.send({ users, page, pages: Math.ceil(count / limit) });
   })
 );
 

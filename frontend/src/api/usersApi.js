@@ -19,7 +19,7 @@ export const usersApi = createApi({
   tagTypes: ["Users", "Vendedores"],
   endpoints: (build) => ({
     getUsers: build.query({
-      query: () => "/users",
+      query: ({ page = 1, limit = 10, search = "" }) => `/users?page=${page}&limit=${limit}&search=${search}`,
       // Provee un tag general para la lista de usuarios.
       providesTags: (result) => (result ? [{ type: "Users", id: "LIST" }] : []),
     }),
