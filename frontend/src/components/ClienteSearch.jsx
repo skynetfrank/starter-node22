@@ -42,7 +42,7 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
         setNewClientData({ nombre: "", direccion: "", celular: "" });
       }, 300); // Espera a que la animación de cierre termine
     }
-  }, [isOpen]);
+  }, [isOpen, resetSearch]);
 
   // Manejar la respuesta de la API
   useEffect(() => {
