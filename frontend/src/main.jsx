@@ -11,10 +11,10 @@ import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import HomeScreen from "./screens/HomeScreen";
 import UnderConstruction from "./components/UnderConstruction";
-import ClientesScreen from './screens/ClientesScreen';
-import ClienteEditScreen from './screens/ClienteEditScreen'; // O importa ClienteForm directamente
+import ClientesScreen from "./screens/ClientesScreen";
+import ClienteEditScreen from "./screens/ClienteEditScreen"; // O importa ClienteForm directamente
 import UsersListScreen from "./screens/UsersListScreen";
-
+import UserEditScreen from "./screens/UserEditScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,12 +27,11 @@ const router = createBrowserRouter(
         <Route path="/clientes" element={<ClientesScreen />} />
         <Route path="/clientes/nuevo" element={<ClienteEditScreen />} /> {/* Ruta para crear */}
         <Route path="/clientes/:id/edit" element={<ClienteEditScreen />} /> {/* Ruta para editar */}
-        <Route path="/users" element={<UsersListScreen />} />
-        <Route path="/users/nuevo" element={<UnderConstruction />} /> {/* Placeholder */}
-        <Route path="/users/:id/edit" element={<UnderConstruction />} /> {/* Placeholder */}
+        <Route path="/users" element={<UsersListScreen />} /> {/* Ruta para listar */}
+        <Route path="/users/nuevo" element={<UserEditScreen />} /> {/* Ruta para crear */}
+        <Route path="/users/:id/edit" element={<UserEditScreen />} /> {/* Ruta para editar */}
       </Route>
       <Route path="/enconstruccion" element={<UnderConstruction />}></Route>
-
     </Route>
   )
 );
