@@ -177,7 +177,10 @@ const ClienteSearch = ({ isOpen, onClose, onClientSelect }) => {
                 type="text"
                 placeholder="Ingrese Cédula o RIF (ej: V12345678)"
                 value={rif}
-                onChange={(e) => setRif(e.target.value)}
+                onChange={(e) => {
+                  setRif(e.target.value);
+                  setValidationError(null); // Limpiar el error al escribir
+                }}
                 disabled={isSearching}
                 onKeyPress={(e) => e.key === "Enter" && handleSearch()}
               />
