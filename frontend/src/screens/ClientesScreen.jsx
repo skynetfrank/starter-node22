@@ -60,24 +60,24 @@ const ClientesScreen = () => {
 
   return (
     <div className="clientes-screen-container">
-      <div className="clientes-header">
-        <h1>Gestión de Clientes</h1>
-        <Button onClick={handleCreate} className="btn-primary btn-with-icon">
-          <Plus size={18} />
-          <span>Crear Cliente</span>
-        </Button>
+      <h1>Gestión de Clientes</h1>
+      <div className="flx">
+        <div className="search-bar-wrapper">
+          <Search className="search-icon" size={20} />
+          <input
+            type="text"
+            placeholder="Buscar por nombre, RIF o email..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div className="clientes-header">
+          <Button onClick={handleCreate} className="btn-primary btn-with-icon">
+            <Plus size={18} />
+            <span>Crear Cliente</span>
+          </Button>
+        </div>
       </div>
-
-      <div className="search-bar-wrapper">
-        <Search className="search-icon" size={20} />
-        <input
-          type="text"
-          placeholder="Buscar por nombre, RIF o email..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
-
       {isLoading ? (
         <LoadingBox />
       ) : error ? (
