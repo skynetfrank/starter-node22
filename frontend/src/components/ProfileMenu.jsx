@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
-import { User, LogOut, PersonStandingIcon } from "lucide-react";
+import { User, LogOut, PersonStandingIcon, UserSearchIcon } from "lucide-react";
 
 const getInitials = (name = "", lastName = "") => {
   if (!name) return "";
@@ -59,6 +59,9 @@ function ProfileMenu({ userInfo, onSignout }) {
         </Link>
         <Link to="/clientes" onClick={() => setIsOpen(false)}>
           <PersonStandingIcon size={16} /> Clientes
+        </Link>
+        <Link to="/users" onClick={() => setIsOpen(false)}>
+          <UserSearchIcon size={16} /> Users
         </Link>
       </div>
     </div>

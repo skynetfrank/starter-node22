@@ -66,6 +66,14 @@ export const usersApi = createApi({
       // Invalida el tag del usuario específico para forzar un refetch de `getUser`.
       invalidatesTags: (result, error, { userId }) => [{ type: "Users", id: userId }],
     }),
+    deleteUser: build.mutation({
+      query: (id) => ({
+        url: `/users/${id}`,
+        method: "DELETE",
+      }),
+      // Invalida la lista para que el usuario desactivado se refleje en la UI.
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
+    }),
   }),
 });
 
@@ -78,4 +86,5 @@ export const {
   useGetVendedoresQuery,
   useSigninUserMutation, // Exportamos el nuevo hook
   useUpdateUserProfileMutation, // Exportamos la nueva mutación
+  useDeleteUserMutation,
 } = usersApi;
