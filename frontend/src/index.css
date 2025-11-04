@@ -68,6 +68,12 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.flx{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .centrado {
   width: 100%;
   text-align: center;
@@ -1526,7 +1532,7 @@ footer {
 
 .search-bar-wrapper {
   position: relative;
-  margin-bottom: 1.5rem;
+
 }
 
 .search-bar-wrapper .search-icon {
