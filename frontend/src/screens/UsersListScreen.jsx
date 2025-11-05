@@ -99,12 +99,22 @@ const UsersListScreen = () => {
               <tbody>
                 {users.map((user) => (
                   <tr key={user._id}>
-                    <td>{user.nombre}</td>
-                    <td>{user.email}</td>
-                    <td className="responsive-hide-sm">{user.cedula}</td>
-                    <td>{user.isAdmin ? "Sí" : "No"}</td>
-                    <td>{user.isActive ? "Sí" : "No"}</td>
-                    <td className="clientes-table-actions">
+                    <td data-label="Nombre" className="card-group-info">
+                      {user.nombre}
+                    </td>
+                    <td data-label="Email" className="card-group-info">
+                      {user.email}
+                    </td>
+                    <td data-label="Cédula" className="responsive-hide-sm card-group-info">
+                      {user.cedula}
+                    </td>
+                    <td data-label="Admin" className="card-group-status">
+                      {user.isAdmin ? "Sí" : "No"}
+                    </td>
+                    <td data-label="Activo" className="card-group-status">
+                      {user.isActive ? "Sí" : "No"}
+                    </td>
+                    <td data-label="Acciones" className="clientes-table-actions card-group-actions">
                       <Tooltip text="Editar" position="left">
                         <button onClick={() => handleEdit(user._id)}>
                           <Edit size={18} />

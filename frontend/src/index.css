@@ -1603,6 +1603,79 @@ footer {
   color: #adb5bd;
 }
 
+/* --- Estilos para vista de tarjeta en móvil --- */
+@media (max-width: 768px) {
+  /* Ocultar los encabezados de la tabla en móvil */
+  .clientes-table thead {
+    display: none;
+  }
+
+  /* Convertir cada fila en una tarjeta */
+  .clientes-table tr {
+    display: flex; /* Usar flexbox para reordenar el contenido */
+    flex-direction: column;
+    background-color: var(--color-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 0.75rem 1rem;
+  }
+
+  /* Convertir cada celda en un bloque con padding */
+  .clientes-table td {
+    display: flex;
+    justify-content: space-between; /* Etiqueta a la izquierda, contenido a la derecha */
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: none; /* Quitamos los bordes individuales */
+    font-size: 0.9rem;
+  }
+
+  /* Crear la etiqueta usando el atributo data-label */
+  .clientes-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-color);
+    opacity: 0.9;
+  }
+
+  /* --- Agrupación y Orden --- */
+  .card-group-info {
+    order: 1; /* Primer grupo */
+  }
+  .card-group-status {
+    order: 2; /* Segundo grupo */
+  }
+  .card-group-actions {
+    order: 3; /* Tercer grupo */
+  }
+
+  /* --- Separadores entre grupos --- */
+  .card-group-info:last-of-type::after,
+  .card-group-status:last-of-type::after {
+    content: "";
+    display: block;
+    order: 1; /* Asegura que el separador se coloque después del último elemento del grupo */
+    width: 100%;
+    height: 1px;
+    background-color: var(--border-color);
+    margin-top: 0.75rem;
+  }
+
+  /* Ajustar la sección de acciones para que se vea bien en la tarjeta */
+  .clientes-table-actions {
+    padding-top: 0.75rem;
+  }
+
+  /* El contenido de las acciones (los botones) se alinea a la derecha */
+  .clientes-table-actions > div {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
 /* Clases para responsividad de la tabla */
 @media (max-width: 768px) {
   /* 'md' breakpoint */
