@@ -72,10 +72,11 @@ const UsersListScreen = () => {
           />
         </div>
         <div className="clientes-header">
-          <Button onClick={handleCreate} className="btn-primary btn-with-icon">
-            <Plus size={18} />
-            <span>Crear Usuario</span>
-          </Button>
+          <Tooltip text="Nuevo Usuario" position="left">
+            <Button onClick={handleCreate} className="btn-primary btn-with-icon">
+              <Plus size={24} />
+            </Button>
+          </Tooltip>
         </div>
       </div>
       {isLoading ? (
