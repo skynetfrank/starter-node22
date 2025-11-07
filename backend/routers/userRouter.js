@@ -18,12 +18,12 @@ userRouter.get(
 
     const searchQuery = search
       ? {
-          $or: [
-            { nombre: { $regex: search, $options: "i" } },
-            { email: { $regex: search, $options: "i" } },
-            { cedula: { $regex: search, $options: "i" } },
-          ],
-        }
+        $or: [
+          { nombre: { $regex: search, $options: "i" } },
+          { email: { $regex: search, $options: "i" } },
+          { cedula: { $regex: search, $options: "i" } },
+        ],
+      }
       : {};
 
     const count = await User.countDocuments(searchQuery);
