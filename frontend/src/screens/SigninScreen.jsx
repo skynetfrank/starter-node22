@@ -47,7 +47,11 @@ export default function SigninScreen() {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const userData = await signinUser({ email, password }).unwrap();
+      // Sanitización básica en el frontend:
+      // - Eliminar espacios en blanco al inicio y al final del email.
+      const sanitizedEmail = email.trim();
+
+      const userData = await signinUser({ email: sanitizedEmail, password }).unwrap();
       // 5. Si el login es exitoso, despachamos la acción para guardar los datos en el store
       dispatch(signinAction(userData));
       // La redirección ahora es manejada por el callback onSuccess del hook

@@ -1,6 +1,7 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
+import { body, validationResult } from "express-validator";
 import User from "../models/user.js";
 import { generateToken, isAdmin, isAuth } from "../utils.js";
 
@@ -48,8 +49,22 @@ userRouter.get(
 
 userRouter.post(
   "/signin",
+  // 1. Sanitización y validación con express-validator
+  body("email").isEmail().withMessage("Por favor, introduce un correo electrónico válido.").normalizeEmail(),
+  body("password").notEmpty().withMessage("La contraseña no puede estar vacía."),
   expressAsyncHandler(async (req, res) => {
-    // Solo permite el login a usuarios que estén activos
+    // 2. Comprobar si hay errores de validación
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // Si hay errores, se devuelve un error 400 con los detalles
+      return res.status(400).send({ message: errors.array()[0].msg });
+    }
+
+    // 3. Los datos ya están sanitizados y se pueden usar de forma segura desde req.body
+    //    - `normalizeEmail()` ha convertido el email a un formato estándar (minúsculas, etc.).
+    //    - `notEmpty()` ha verificado que la contraseña no esté vacía.
+
+    // Búsqueda del usuario con el email ya normalizado
     const user = await User.findOne({ email: req.body.email, isActive: true });
     if (user) {
       if (await bcrypt.compare(req.body.password, user.password)) {
