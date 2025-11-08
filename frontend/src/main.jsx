@@ -16,6 +16,7 @@ import ClienteEditScreen from "./screens/ClienteEditScreen"; // O importa Client
 import UsersListScreen from "./screens/UsersListScreen";
 import UserEditScreen from "./screens/UserEditScreen";
 import DashboardWidget from "./components/DashboardWidget";
+import CombinedDashboardWidget from "./components/CombinedDashboardWidget";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,7 +32,7 @@ const router = createBrowserRouter(
         <Route path="/users" element={<UsersListScreen />} /> {/* Ruta para listar */}
         <Route path="/users/nuevo" element={<UserEditScreen />} /> {/* Ruta para crear */}
         <Route path="/users/:id/edit" element={<UserEditScreen />} /> {/* Ruta para editar */}
-        <Route path="/dashboard" element={<DashboardWidget />}></Route>
+        <Route path="/dashboard" element={<CombinedDashboardWidget />}></Route>
       </Route>
       <Route path="/enconstruccion" element={<UnderConstruction />}></Route>
     </Route>
