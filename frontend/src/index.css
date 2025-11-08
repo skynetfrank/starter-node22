@@ -2266,6 +2266,30 @@ footer {
   color: #10b981; /* Verde para éxito/dinero */
 }
 
+.widget-rate-display .text-info {
+  color: #3b82f6; /* Azul para información/Euro */
+}
+
+/* Estilos para mostrar múltiples tasas */
+.widget-multi-rate-display {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  width: 100%;
+  gap: 1rem;
+}
+
+.widget-rate-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.rate-divider {
+  width: 1px;
+  background-color: var(--border-color);
+}
+
 .rate-value {
   display: flex;
   flex-direction: column;

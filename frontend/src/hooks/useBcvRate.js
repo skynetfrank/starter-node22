@@ -5,16 +5,16 @@ import { useState, useEffect } from "react";
  * desde la API de DolarVzla.
  *
  * @returns {{
- *   rate: number | null;
+ *   rates: { usd: number | null, eur: number | null };
  *   loading: boolean;
  *   error: string | null;
  * }} - Un objeto que contiene:
- *    - `rate`: La tasa de cambio del dólar (USD) como un número redondeado a 2 decimales. `null` si no se ha cargado.
+ *    - `rates`: Un objeto con las tasas de cambio para USD y EUR, redondeadas a 2 decimales.
  *    - `loading`: Un booleano que indica si la solicitud está en curso.
  *    - `error`: Un mensaje de error si la API falla.
  */
 const useBcvRate = () => {
-    const [rate, setRate] = useState(null);
+    const [rates, setRates] = useState({ usd: null, eur: null });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -33,14 +33,17 @@ const useBcvRate = () => {
                 }
                 const data = await response.json();
 
-                // Accedemos al valor del dólar desde la nueva estructura de la respuesta.
-                if (data?.current?.usd) {
-                    setRate(parseFloat(data.current.usd.toFixed(2)));
+                // Accedemos a los valores de USD y EUR desde la respuesta.
+                if (data?.current?.usd && data?.current?.eur) {
+                    setRates({
+                        usd: parseFloat(data.current.usd.toFixed(2)),
+                        eur: parseFloat(data.current.eur.toFixed(2)),
+                    });
                 } else {
-                    throw new Error("No se encontró la tasa del dólar en la respuesta de la API.");
+                    throw new Error("No se encontraron las tasas de cambio en la respuesta de la API.");
                 }
             } catch (err) {
-                console.error("No se pudo obtener la tasa de cambio del BCV:", err);
+                console.error("No se pudo obtener las tasas de cambio:", err);
                 setError("No se pudo obtener la tasa de cambio en este momento.");
             } finally {
                 setLoading(false);
@@ -50,7 +53,7 @@ const useBcvRate = () => {
         fetchRate();
     }, []); // El array vacío asegura que el efecto se ejecute solo una vez al montar el componente.
 
-    return { rate, loading, error };
+    return { rates, loading, error };
 };
 
 export default useBcvRate;
