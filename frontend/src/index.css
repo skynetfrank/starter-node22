@@ -2184,3 +2184,112 @@ footer {
   visibility: visible;
   opacity: 1;
 }
+
+/* ==========================================================================
+   24. ESTILOS PARA DASHBOARD WIDGET (BCV)
+   ========================================================================== */
+
+.bcv-widget-card {
+  background-color: var(--color-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem; /* 12px */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  min-width: 260px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.bcv-widget-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.07), 0 3px 6px rgba(0, 0, 0, 0.07);
+}
+
+.widget-header {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.widget-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.widget-body {
+  padding: 1.5rem 1rem;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px; /* Altura mínima para mantener la proporción */
+}
+
+.widget-footer {
+  padding: 0.5rem 1rem;
+  background-color: var(--color-secondary);
+  font-size: 0.75rem; /* 12px */
+  text-align: center;
+  color: #6c757d;
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .widget-footer {
+  color: #adb5bd;
+}
+
+/* Estilos para los estados de carga y error */
+.widget-state-feedback {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.widget-state-feedback.text-danger {
+  color: #ef4444; /* Rojo para errores */
+}
+
+/* Estilos para la visualización de la tasa */
+.widget-rate-display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.widget-rate-display .text-success {
+  color: #10b981; /* Verde para éxito/dinero */
+}
+
+.rate-value {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.rate-amount {
+  font-size: 1.75rem; /* 28px */
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.rate-currency {
+  font-size: 0.875rem; /* 14px */
+  font-weight: 500;
+  color: #6c757d;
+}
+
+[data-theme="dark"] .rate-currency {
+  color: #adb5bd;
+}
+
+.error-message {
+  color: #ef4444;
+  font-weight: 500;
+  margin: 0;
+}
