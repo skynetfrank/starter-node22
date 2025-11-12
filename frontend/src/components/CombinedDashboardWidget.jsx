@@ -98,7 +98,7 @@ const CombinedDashboardWidget = () => {
     }
     return null;
   };
-
+console.log("RATES:", rates);
   return (
     <div className="dashboard-widget combined-widget-card">
       <div className="widget-tabs">
