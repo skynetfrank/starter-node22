@@ -19,7 +19,7 @@ const useBcvRate = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const PRIMARY_API_URL = "https://api.dolarvzlax.com/public/exchange-rate";
+  const PRIMARY_API_URL = "https://api.dolarvzla.com/public/exchange-rate";
 
   const promptForManualRate = async () => {
     const { value: manualRate } = await Swal.fire({
