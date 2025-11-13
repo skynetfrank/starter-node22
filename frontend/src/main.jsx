@@ -15,7 +15,6 @@ import ClientesScreen from "./screens/ClientesScreen";
 import ClienteEditScreen from "./screens/ClienteEditScreen"; // O importa ClienteForm directamente
 import UsersListScreen from "./screens/UsersListScreen";
 import UserEditScreen from "./screens/UserEditScreen";
-import DashboardWidget from "./components/DashboardWidget";
 import CombinedDashboardWidget from "./components/CombinedDashboardWidget";
 
 const router = createBrowserRouter(
