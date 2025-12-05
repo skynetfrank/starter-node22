@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ClienteSearch from "../components/ClienteSearch";
 import Button from "../components/Button";
+import { Link } from "react-router";
 
 function HomeScreen() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,6 +38,14 @@ function HomeScreen() {
               <p><strong>Dirección:</strong> {clienteInfo.direccion}</p>
             </div>
           )}
+        </div>
+
+        {/* Sección de prueba para los componentes de Input */}
+        <div style={{ border: "1px solid var(--border-color)", padding: "2rem", borderRadius: "12px", backgroundColor: "var(--color-primary)" }}>
+          <h2 style={{ marginBottom: "1rem" }}>Prueba de Componentes de Inputs</h2>
+          <Link to="/input-tester">
+            <Button className="btn-primary">Ir al Tester de Inputs</Button>
+          </Link>
         </div>
       </div>
 

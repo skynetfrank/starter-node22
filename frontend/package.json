@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "^2.9.2",
     "dayjs": "^1.11.19",
     "lucide-react": "^0.552.0",
+    "prop-types": "^15.8.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-redux": "^9.2.0",

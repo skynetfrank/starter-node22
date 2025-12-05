@@ -16,11 +16,13 @@ import ClienteEditScreen from "./screens/ClienteEditScreen"; // O importa Client
 import UsersListScreen from "./screens/UsersListScreen";
 import UserEditScreen from "./screens/UserEditScreen";
 import CombinedDashboardWidget from "./components/CombinedDashboardWidget";
+import InputTester from "./components/InputTester";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index={true} element={<HomeScreen />}></Route>
+      <Route path="/input-tester" element={<InputTester />}></Route>
       <Route path="/signin" element={<SigninScreen />}></Route>
       <Route path="/register" element={<RegisterScreen />}></Route>
       <Route path="" element={<ProtectedRoute />}>

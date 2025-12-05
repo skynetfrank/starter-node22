@@ -1,0 +1,206 @@
+/* Variables CSS para personalización */
+:root {
+  --money-input-primary: #3a86ff;
+  --money-input-primary-light: #e7f0ff;
+  --money-input-text: #333;
+  --money-input-text-light: #666;
+  --money-input-border: #ddd;
+  --money-input-border-hover: #bbb;
+  --money-input-bg: #fff;
+  --money-input-error: #ff4757;
+  --money-input-success: #2ed573;
+  --money-input-radius: 12px;
+  --money-input-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --money-input-transition: all 0.2s ease;
+  --money-input-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Contenedor principal */
+.money-input-container {
+  font-family: var(--money-input-font-family);
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* Etiqueta */
+.money-input-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--money-input-text);
+  font-size: 0.95rem;
+  transition: var(--money-input-transition);
+}
+
+/* Contenedor del input */
+.money-input-wrapper {
+  position: relative;
+  background-color: var(--money-input-bg);
+  border: 2px solid var(--money-input-border);
+  border-radius: var(--money-input-radius);
+  padding: 16px 20px 12px 20px;
+  transition: var(--money-input-transition);
+  cursor: text;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.money-input-wrapper:hover {
+  border-color: var(--money-input-border-hover);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.money-input-wrapper.focused {
+  border-color: var(--money-input-primary);
+  box-shadow: var(--money-input-shadow);
+  background-color: var(--money-input-primary-light);
+}
+
+/* Símbolo de moneda */
+.currency-symbol {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--money-input-text);
+  margin-right: 8px;
+  transition: var(--money-input-transition);
+}
+
+.money-input-wrapper.focused .currency-symbol {
+  color: var(--money-input-primary);
+}
+
+/* Input real */
+.money-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--money-input-text);
+  outline: none;
+  width: 100%;
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+  caret-color: var(--money-input-primary);
+}
+
+.money-input::placeholder {
+  color: transparent;
+}
+
+/* Placeholder personalizado */
+.money-placeholder {
+  position: absolute;
+  left: 56px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--money-input-text-light);
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.money-input-wrapper.focused .money-placeholder {
+  opacity: 0.3;
+}
+
+/* Decoración del input */
+.input-decoration {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  overflow: hidden;
+}
+
+.decoration-line {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--money-input-primary), #8a2be2);
+  transition: width 0.5s ease;
+}
+
+.money-input-wrapper.focused .decoration-line {
+  width: 100%;
+}
+
+/* Texto de ayuda */
+.money-input-hint {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--money-input-text-light);
+  padding-left: 4px;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: var(--money-input-transition);
+}
+
+.money-input-wrapper.focused ~ .money-input-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Estados de validación */
+.money-input-wrapper.valid {
+  border-color: var(--money-input-success);
+}
+
+.money-input-wrapper.invalid {
+  border-color: var(--money-input-error);
+}
+
+/* Estilos para modo oscuro */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --money-input-primary: #4d9eff;
+    --money-input-primary-light: rgba(77, 158, 255, 0.15);
+    --money-input-text: #f0f0f0;
+    --money-input-text-light: #aaa;
+    --money-input-border: #444;
+    --money-input-border-hover: #666;
+    --money-input-bg: #222;
+    --money-input-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Animación de entrada */
+@keyframes moneyInputPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(58, 134, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(58, 134, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(58, 134, 255, 0);
+  }
+}
+
+.money-input-wrapper.focused {
+  animation: moneyInputPulse 1.5s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .money-input-wrapper {
+    padding: 14px 16px 10px 16px;
+  }
+  
+  .currency-symbol {
+    font-size: 1.3rem;
+  }
+  
+  .money-input,
+  .money-placeholder {
+    font-size: 1.5rem;
+  }
+  
+  .money-placeholder {
+    left: 52px;
+  }
+}

@@ -1,0 +1,335 @@
+/* Variables CSS para el componente de teléfono venezolano */
+:root {
+  --phone-input-primary: #00247d;
+  --phone-input-primary-light: #e8f0fe;
+  --phone-input-secondary: #cf142b;
+  --phone-input-secondary-light: #fde8e9;
+  --phone-input-text: #1a1a1a;
+  --phone-input-text-light: #666;
+  --phone-input-border: #d1d5db;
+  --phone-input-border-hover: #9ca3af;
+  --phone-input-bg: #ffffff;
+  --phone-input-error: #dc2626;
+  --phone-input-error-light: #fee2e2;
+  --phone-input-success: #059669;
+  --phone-input-success-light: #d1fae5;
+  --phone-input-warning: #d97706;
+  --phone-input-radius: 10px;
+  --phone-input-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --phone-input-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --phone-input-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Contenedor principal */
+.venezuelan-phone-input-container {
+  font-family: var(--phone-input-font-family);
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Header del input */
+.phone-input-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.phone-input-label {
+  display: block;
+  font-weight: 600;
+  color: var(--phone-input-text);
+  font-size: 0.95rem;
+  transition: var(--phone-input-transition);
+}
+
+.required-asterisk {
+  color: var(--phone-input-error);
+  margin-left: 2px;
+}
+
+.phone-type-indicator {
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, var(--phone-input-primary-light), var(--phone-input-secondary-light));
+  border-radius: 20px;
+  color: var(--phone-input-primary);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Contenedor del input */
+.phone-input-wrapper {
+  position: relative;
+  background-color: var(--phone-input-bg);
+  border: 2px solid var(--phone-input-border);
+  border-radius: var(--phone-input-radius);
+  padding: 14px 18px;
+  transition: var(--phone-input-transition);
+  cursor: text;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.phone-input-wrapper:hover {
+  border-color: var(--phone-input-border-hover);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.phone-input-wrapper.focused {
+  border-color: var(--phone-input-primary);
+  box-shadow: var(--phone-input-shadow);
+  background-color: var(--phone-input-primary-light);
+}
+
+.phone-input-wrapper.valid {
+  border-color: var(--phone-input-success);
+  background-color: var(--phone-input-success-light);
+}
+
+.phone-input-wrapper.invalid {
+  border-color: var(--phone-input-error);
+  background-color: var(--phone-input-error-light);
+}
+
+.phone-input-wrapper[data-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #f9fafb;
+}
+
+/* Código de país */
+.country-code {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--phone-input-primary);
+  margin-right: 10px;
+  background: linear-gradient(135deg, var(--phone-input-primary), var(--phone-input-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background-color: rgba(0, 36, 125, 0.08);
+}
+
+/* Input real */
+.phone-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--phone-input-text);
+  outline: none;
+  width: 100%;
+  min-width: 0;
+  letter-spacing: 0.5px;
+  caret-color: var(--phone-input-primary);
+}
+
+.phone-input::placeholder {
+  color: transparent;
+}
+
+.phone-input:disabled {
+  cursor: not-allowed;
+}
+
+/* Placeholder personalizado */
+.phone-placeholder {
+  position: absolute;
+  left: 90px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--phone-input-text-light);
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.phone-input-wrapper.focused .phone-placeholder {
+  opacity: 0.3;
+}
+
+/* Icono de validación */
+.phone-valid-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background-color: var(--phone-input-success);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+  animation: scaleIn 0.3s ease;
+}
+
+/* Footer del input */
+.phone-input-footer {
+  margin-top: 8px;
+  min-height: 22px;
+}
+
+.error-message {
+  color: var(--phone-input-error);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: slideDown 0.3s ease;
+}
+
+.format-hint {
+  color: var(--phone-input-primary);
+  font-size: 0.85rem;
+  font-style: italic;
+  animation: slideDown 0.3s ease;
+}
+
+.required-hint {
+  color: var(--phone-input-text-light);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* Detalles del teléfono */
+.phone-details {
+  margin-top: 16px;
+  padding: 16px;
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  border-radius: var(--phone-input-radius);
+  border-left: 4px solid var(--phone-input-primary);
+  animation: slideDown 0.4s ease;
+}
+
+.phone-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.phone-detail:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 0.9rem;
+  color: var(--phone-input-text-light);
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 0.9rem;
+  color: var(--phone-input-text);
+  font-weight: 600;
+  font-family: 'Monaco', 'Consolas', monospace;
+}
+
+.valid-status {
+  color: var(--phone-input-success);
+}
+
+.invalid-status {
+  color: var(--phone-input-error);
+}
+
+/* Animaciones */
+@keyframes scaleIn {
+  from {
+    transform: translateY(-50%) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Efecto de bandera venezolana en el código de país */
+.country-code::before {
+  content: "🇻🇪";
+  margin-right: 6px;
+  font-size: 1.1rem;
+}
+
+/* Estilos para modo oscuro */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --phone-input-primary: #4d9eff;
+    --phone-input-primary-light: rgba(77, 158, 255, 0.15);
+    --phone-input-secondary: #ff6b6b;
+    --phone-input-secondary-light: rgba(255, 107, 107, 0.15);
+    --phone-input-text: #f0f0f0;
+    --phone-input-text-light: #aaa;
+    --phone-input-border: #444;
+    --phone-input-border-hover: #666;
+    --phone-input-bg: #222;
+    --phone-input-error-light: rgba(220, 38, 38, 0.15);
+    --phone-input-success-light: rgba(5, 150, 105, 0.15);
+    --phone-input-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  .phone-details {
+    background: linear-gradient(135deg, #2d3748, #4a5568);
+    border-left-color: var(--phone-input-primary);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .venezuelan-phone-input-container {
+    max-width: 100%;
+  }
+  
+  .phone-input-wrapper {
+    padding: 12px 14px;
+  }
+  
+  .country-code {
+    font-size: 1rem;
+    margin-right: 8px;
+  }
+  
+  .phone-input,
+  .phone-placeholder {
+    font-size: 1.1rem;
+  }
+  
+  .phone-placeholder {
+    left: 85px;
+  }
+  
+  .phone-input-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .phone-type-indicator {
+    align-self: flex-start;
+  }
+}
