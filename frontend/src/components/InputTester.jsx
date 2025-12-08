@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import InputCedula from "../inputs/InputCedula";
 import InputMoney from "../inputs/InputMoney";
 import InputPhone from "../inputs/InputPhone";
+import CurrencyInput from "../inputs/CurrencyInput"; // Importamos CurrencyInput
 
 const containerStyle = {
   padding: "2rem",
@@ -39,6 +40,7 @@ const InputTester = () => {
   const [cedula, setCedula] = useState("");
   const [money, setMoney] = useState(0);
   const [phone, setPhone] = useState({ raw: "", formatted: "", isValid: false });
+  const [currencyValue, setCurrencyValue] = useState(0); // Estado para CurrencyInput
 
   return (
     <div style={containerStyle}>
@@ -69,6 +71,15 @@ const InputTester = () => {
           <InputPhone label="Teléfono de contacto" onPhoneChange={setPhone} />
           <pre style={preStyle}>
             <code>Objeto Phone: {JSON.stringify(phone, null, 2)}</code>
+          </pre>
+        </div>
+
+        {/* CurrencyInput */}
+        <div style={sectionStyle}>
+          <h2>Prueba de CurrencyInput</h2>
+          <CurrencyInput label="Monto con CurrencyInput" onValueChange={setCurrencyValue} />
+          <pre style={preStyle}>
+            <code>Valor numérico: {JSON.stringify(currencyValue, null, 2)}</code>
           </pre>
         </div>
       </div>
