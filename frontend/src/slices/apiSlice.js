@@ -3,7 +3,18 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // Define la URL base de tu API.
 // Dado que tu servidor Express sirve tanto el frontend como la API,
 // una ruta relativa vacía es suficiente, ya que las peticiones irán al mismo origen.
-const baseQuery = fetchBaseQuery({ baseUrl: "" });
+const baseQuery = fetchBaseQuery({
+  baseUrl: "",
+  // Prepara los encabezados de cada petición para incluir el token de autorización.
+  prepareHeaders: (headers, { getState }) => {
+    // Obtenemos la información del usuario del estado de Redux.
+    const { userInfo } = getState().userSignin;
+    if (userInfo && userInfo.token) {
+      headers.set("authorization", `Bearer ${userInfo.token}`);
+    }
+    return headers;
+  },
+});
 
 /**
  * Crea el "slice" de la API principal.

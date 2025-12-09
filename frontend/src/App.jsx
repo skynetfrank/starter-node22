@@ -5,7 +5,7 @@ import { userSignout } from "./slices/userSlice"; // 1. Importar la nueva acció
 import SplashScreen from "./components/SplashScreen";
 import ProfileMenu from "./components/ProfileMenu";
 import logo from "./assets/logo.jpg";
-import { Sun, Moon, User, CalendarPlus } from "lucide-react";
+import { Sun, Moon, User, CalendarPlus, Clock, BookOpen } from "lucide-react";
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -55,6 +55,17 @@ function App() {
               <CalendarPlus />
             </Link>
 
+            {/* Botones solo para Admins */}
+            {userInfo?.isAdmin && (
+              <>
+                <Link to="/horario" className="header-icon-link" aria-label="Configurar Horario">
+                  <Clock />
+                </Link>
+                <Link to="/bitacora-citas" className="header-icon-link" aria-label="Bitácora de Citas">
+                  <BookOpen />
+                </Link>
+              </>
+            )}
             {userInfo ? (
               <ProfileMenu userInfo={userInfo} onSignout={signoutHandler} />
             ) : (

@@ -38,6 +38,12 @@ export const citasApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Cita"],
     }),
 
+    // Endpoint para que el admin obtenga TODAS las citas
+    getAllCitas: builder.query({
+      query: () => "/api/citas",
+      providesTags: ["Cita"],
+    }),
+
     // Endpoint para que el admin actualice el horario
     updateHorario: builder.mutation({
       query: (data) => ({
@@ -57,4 +63,5 @@ export const {
   useGetMisCitasQuery,
   useCancelarCitaMutation,
   useUpdateHorarioMutation,
+  useGetAllCitasQuery,
 } = citasApiSlice;

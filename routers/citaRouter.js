@@ -1,11 +1,24 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import Cita from "../models/citaModel.js";
-import Horario from "../models/horarioModel.js";
-import { isAuth } from "../utils.js";
+import { isAuth, isAdmin } from "../utils.js";
 import { body, validationResult } from "express-validator";
 
 const citaRouter = express.Router();
+
+// GET /api/citas - Obtener TODAS las citas (solo para administradores)
+citaRouter.get(
+  "/",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const citas = await Cita.find({})
+      .populate("user", "nombre apellido email") // Obtiene detalles del usuario asociado
+      .sort({ fecha: -1, hora: 1 }); // Ordena por fecha más reciente primero
+
+    res.send(citas);
+  })
+);
 
 // GET /api/citas/disponibilidad?fecha=YYYY-MM-DD
 // Endpoint clave para obtener las horas ya ocupadas en un día específico.

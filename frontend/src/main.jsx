@@ -18,6 +18,8 @@ import UserEditScreen from "./screens/UserEditScreen";
 import CombinedDashboardWidget from "./components/CombinedDashboardWidget";
 import InputTester from "./components/InputTester";
 import AgendarCita from "./components/AgendarCita";
+import ConfiguracionHorario from "./components/ConfiguracionHorario";
+import BitacoraCitas from "./components/BitacoraCitas";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -38,6 +40,8 @@ const router = createBrowserRouter(
       </Route>
       <Route path="/enconstruccion" element={<UnderConstruction />}></Route>
       <Route path="/citas" element={<AgendarCita />}></Route>
+      <Route path="/horario" element={<ConfiguracionHorario />}></Route>
+      <Route path="/bitacora-citas" element={<BitacoraCitas />}></Route>
     </Route>
   )
 );
