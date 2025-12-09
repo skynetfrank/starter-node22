@@ -5,7 +5,7 @@ import { userSignout } from "./slices/userSlice"; // 1. Importar la nueva acció
 import SplashScreen from "./components/SplashScreen";
 import ProfileMenu from "./components/ProfileMenu";
 import logo from "./assets/logo.jpg";
-import { Sun, Moon, User } from "lucide-react";
+import { Sun, Moon, User, CalendarPlus } from "lucide-react";
 
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
@@ -50,6 +50,10 @@ function App() {
               {/* Luna */}
               <Moon className="theme-icon moon-icon" />
             </button>
+
+            <Link to="/citas" className="header-icon-link" aria-label="Agendar Cita">
+              <CalendarPlus />
+            </Link>
 
             {userInfo ? (
               <ProfileMenu userInfo={userInfo} onSignout={signoutHandler} />

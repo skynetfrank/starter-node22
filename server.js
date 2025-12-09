@@ -5,6 +5,8 @@ import cors from "cors";
 import path from "path";
 import userRouter from "./routers/userRouter.js";
 import clienteRouter from "./routers/clienteRouter.js";
+import horarioRouter from "./routers/horarioRouter.js";
+import citaRouter from "./routers/citaRouter.js";
 
 dotenv.config();
 
@@ -18,6 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/users", userRouter);
 app.use("/api/clientes", clienteRouter);
+app.use("/api/horarios", horarioRouter);
+app.use("/api/citas", citaRouter);
 
 const __dirname = path.resolve();
 

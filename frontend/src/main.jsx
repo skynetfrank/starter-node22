@@ -17,6 +17,7 @@ import UsersListScreen from "./screens/UsersListScreen";
 import UserEditScreen from "./screens/UserEditScreen";
 import CombinedDashboardWidget from "./components/CombinedDashboardWidget";
 import InputTester from "./components/InputTester";
+import AgendarCita from "./components/AgendarCita";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,6 +37,7 @@ const router = createBrowserRouter(
         <Route path="/dashboard" element={<CombinedDashboardWidget />}></Route>
       </Route>
       <Route path="/enconstruccion" element={<UnderConstruction />}></Route>
+      <Route path="/citas" element={<AgendarCita />}></Route>
     </Route>
   )
 );
