@@ -50,6 +50,26 @@
   cursor: pointer;
 }
 
+.btn-ordenar {
+  margin-left: auto; /* Empuja el botón al final */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #e5e7eb;
+  color: #374151;
+  border: none;
+  padding: 0.25rem 0.6rem;
+  border-radius: 1rem; /* Píldora */
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-ordenar:hover {
+  background-color: #d1d5db;
+}
+
 .citas-lista {
   padding: 1.25rem;
   display: flex;

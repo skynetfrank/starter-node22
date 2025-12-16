@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { useGetAllCitasQuery, useCancelCitaMutation } from "../slices/citasApiSlice";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
-import { Calendar, Clock, User, Mail, BookOpen, XCircle, MessageSquareText } from "lucide-react";
+import { Calendar, Clock, User, Mail, BookOpen, XCircle, MessageSquareText, ArrowDownUp } from "lucide-react";
 import "./BitacoraCitas.css";
 
 const BitacoraCitas = () => {
@@ -24,6 +24,9 @@ const BitacoraCitas = () => {
   // Hook para la mutación de cancelar cita
   const [cancelCita, { isLoading: isCancelling }] = useCancelCitaMutation();
   const [openDay, setOpenDay] = useState(null);
+  // Estado para gestionar el orden de las citas por día ('asc' o 'desc')
+  // Por defecto, la API ya las trae en 'asc' (hora: 1)
+  const [sortOrder, setSortOrder] = useState({});
 
   // Proteger la ruta para que solo los administradores puedan acceder
   useEffect(() => {
@@ -76,6 +79,13 @@ const BitacoraCitas = () => {
     setOpenDay(isOpen ? dia : null);
   };
 
+  // Maneja el cambio de orden para un día específico
+  const handleSortToggle = (dia) => {
+    setSortOrder((prev) => ({
+      ...prev,
+      [dia]: prev[dia] === "desc" ? "asc" : "desc",
+    }));
+  };
   const handleCancelClick = async (citaId) => {
     const result = await Swal.fire({
       title: "¿Estás seguro?",
@@ -122,46 +132,59 @@ const BitacoraCitas = () => {
                 <summary className="dia-titulo">
                   <Calendar size={20} />
                   <span>{dia}</span>
+                  <button className="btn-ordenar" onClick={() => handleSortToggle(dia)}>
+                    <ArrowDownUp size={16} />
+                    <span>Ordenar</span>
+                  </button>
                 </summary>
                 <div className="citas-lista">
-                  {citasAgrupadas[dia].map((cita) => (
-                    <div key={cita._id} className="cita-item">
-                      <div className="cita-hora">
-                        <Clock size={16} />
-                        <span>{cita.hora}</span>
-                      </div>
-                      <div className="cita-usuario">
-                        <div className="usuario-detalle">
-                          <User size={16} />
-                          <span>
-                            {cita.user ? `${cita.user.nombre} ${cita.user.apellido}` : "Usuario no disponible"}
-                          </span>
+                  {[...citasAgrupadas[dia]] // Clonamos para no mutar el array original
+                    .sort((a, b) => {
+                      const order = sortOrder[dia] || "asc"; // 'asc' por defecto
+                      if (order === "asc") {
+                        return a.hora.localeCompare(b.hora);
+                      } else {
+                        return b.hora.localeCompare(a.hora);
+                      }
+                    })
+                    .map((cita) => (
+                      <div key={cita._id} className="cita-item">
+                        <div className="cita-hora">
+                          <Clock size={16} />
+                          <span>{cita.hora}</span>
                         </div>
-                        {cita.user?.email && (
-                          <div className="usuario-detalle email">
-                            <Mail size={16} />
-                            <span>{cita.user.email}</span>
+                        <div className="cita-usuario">
+                          <div className="usuario-detalle">
+                            <User size={16} />
+                            <span>
+                              {cita.user ? `${cita.user.nombre} ${cita.user.apellido}` : "Usuario no disponible"}
+                            </span>
                           </div>
-                        )}
-                        {cita.motivo && (
-                          <div className="usuario-detalle motivo">
-                            <MessageSquareText size={16} />
-                            <span>{cita.motivo}</span>
-                          </div>
-                        )}
+                          {cita.user?.email && (
+                            <div className="usuario-detalle email">
+                              <Mail size={16} />
+                              <span>{cita.user.email}</span>
+                            </div>
+                          )}
+                          {cita.motivo && (
+                            <div className="usuario-detalle motivo">
+                              <MessageSquareText size={16} />
+                              <span>{cita.motivo}</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="cita-acciones">
+                          <button
+                            className="btn-cancelar"
+                            onClick={() => handleCancelClick(cita._id)}
+                            disabled={isCancelling}
+                          >
+                            <XCircle size={18} />
+                            <span>{isCancelling ? "Cancelando..." : "Cancelar"}</span>
+                          </button>
+                        </div>
                       </div>
-                      <div className="cita-acciones">
-                        <button
-                          className="btn-cancelar"
-                          onClick={() => handleCancelClick(cita._id)}
-                          disabled={isCancelling}
-                        >
-                          <XCircle size={18} />
-                          <span>{isCancelling ? "Cancelando..." : "Cancelar"}</span>
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </details>
             );
