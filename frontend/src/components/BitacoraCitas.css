@@ -70,6 +70,7 @@
   flex-direction: column;
   width: 100%;
   max-width: 320px;
+  position: relative;
 }
 
 .dia-card::details-content {
@@ -83,6 +84,7 @@
 }
 
 .dia-card[open]::details-content {
+  min-width: 280px;
   /* Fallback for browsers that don't support calc-size() function */
   block-size: auto;
 
@@ -105,7 +107,7 @@
 }
 
 .citas-lista {
-  padding: 1.25rem;
+  padding: 1.25rem 0;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -117,6 +119,7 @@
   gap: 1rem;
   padding-bottom: 1.25rem;
   border-bottom: 1px solid var(--border-color);
+  min-width: 280px;
 }
 
 .cita-item:last-child {
@@ -126,14 +129,21 @@
 
 .cita-hora {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  background-color: var(--color-tertiary);
-  color: var(--btn-primary-text);
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
   font-weight: 600;
   font-size: 0.9rem;
+  background-color: var(--color-secondary);
+  color: var(--text-color);
+}
+
+.cita-hora-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .cita-usuario {
@@ -172,18 +182,14 @@
   border-radius: 4px;
   margin-top: 0.5rem;
 }
-.cita-acciones {
-  margin-left: auto; /* Empuja el botón hacia la derecha */
-  align-self: center; /* Centra el botón verticalmente */
-}
 
 .btn-cancelar {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fee2e2;
+  background-color: transparent;
   color: #b91c1c;
-  border: 1px solid #fecaca;
+  border: none;
   padding: 0.5rem;
   border-radius: 50%;
   width: 36px;
@@ -193,9 +199,8 @@
 }
 
 .btn-cancelar:hover:not(:disabled) {
-  background-color: #fecaca;
+  background-color: #fee2e2;
   color: #991b1b;
-  border-color: #fca5a5;
 }
 
 /* Estilos para citas pasadas */
