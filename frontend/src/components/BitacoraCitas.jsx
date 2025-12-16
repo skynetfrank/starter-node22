@@ -99,8 +99,10 @@ const BitacoraCitas = () => {
   }
 
   // Maneja el acordeón: solo un día puede estar abierto a la vez.
-  const handleToggle = (dia, isOpen) => {
-    setOpenDay(isOpen ? dia : null);
+  const handleToggle = (dia) => {
+    // Si el día clickeado ya está abierto, lo cerramos.
+    // Si no, lo abrimos. Esto da a React el control total.
+    setOpenDay((currentOpenDay) => (currentOpenDay === dia ? null : dia));
   };
 
   // Maneja el cambio de orden para un día específico
@@ -165,13 +167,14 @@ const BitacoraCitas = () => {
               // Si se desea atenuar el día completo si todas sus citas son pasadas, se necesitaría una lógica adicional aquí.
               // Por simplicidad, la atenuación se aplica a nivel de cita-item.
 
-              <details
-                key={dia}
-                className="dia-card"
-                open={isCardOpen}
-                onToggle={(e) => handleToggle(dia, e.target.open)}
-              >
-                <summary className="dia-titulo">
+              <details key={dia} className="dia-card" open={isCardOpen}>
+                <summary
+                  className="dia-titulo"
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevenir el comportamiento nativo del summary/details
+                    handleToggle(dia);
+                  }}
+                >
                   <Calendar size={20} />
                   <span>{dia}</span>
                   <span className="cita-contador">{citasAgrupadas[dia].length}</span>
