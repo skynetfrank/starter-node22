@@ -128,8 +128,11 @@ const BitacoraCitas = () => {
   return (
     <div className="bitacora-container">
       <div className="bitacora-header">
-        <BookOpen size={32} />
-        <h1>Gestión de Citas</h1>
+        <div className="bitacora-titulo">
+          <BookOpen size={32} />
+          <h1>Gestión de Citas</h1>
+        </div>
+
         <div className="bitacora-search-container">
           <Search size={18} className="search-icon" />
           <input
