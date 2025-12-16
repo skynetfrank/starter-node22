@@ -1,0 +1,107 @@
+.mis-citas-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #f9fafb;
+  border-radius: 12px;
+}
+
+.mis-citas-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #1f2937;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.mis-citas-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.citas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.mi-cita-card {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mi-cita-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.mi-cita-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed #d1d5db;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.mi-cita-motivo {
+  background-color: #f3f4f6;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #4b5563;
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.mi-cita-motivo p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.btn-cancelar-user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: auto; /* Empuja el botón al final de la tarjeta */
+  padding: 0.6rem 1rem;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancelar-user:hover:not(:disabled) {
+  background-color: #fecaca;
+  color: #991b1b;
+}
+
+.btn-cancelar-user:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}

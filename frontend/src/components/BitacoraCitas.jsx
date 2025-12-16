@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { useGetAllCitasQuery, useCancelCitaMutation } from "../slices/citasApiSlice";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
-import { Calendar, Clock, User, Mail, BookOpen, XCircle, MessageSquareText, ArrowDownUp } from "lucide-react";
+import { Calendar, Clock, User, Mail, BookOpen, XCircle, MessageSquareText, ArrowDownUp, Search } from "lucide-react";
 import "./BitacoraCitas.css";
 
 const BitacoraCitas = () => {
@@ -28,6 +28,7 @@ const BitacoraCitas = () => {
   // Por defecto, la API ya las trae en 'asc' (hora: 1)
   const [sortOrder, setSortOrder] = useState({});
 
+  const [searchTerm, setSearchTerm] = useState("");
   // Proteger la ruta para que solo los administradores puedan acceder
   useEffect(() => {
     if (!userInfo?.isAdmin) {
@@ -36,11 +37,23 @@ const BitacoraCitas = () => {
     }
   }, [userInfo, navigate]);
 
+  // Filtrar citas por nombre de usuario
+  const citasFiltradas = useMemo(() => {
+    if (!citas) return [];
+    if (!searchTerm.trim()) return citas;
+
+    const lowercasedFilter = searchTerm.toLowerCase();
+    return citas.filter((cita) => {
+      if (!cita.user) return false;
+      const fullName = `${cita.user.nombre} ${cita.user.apellido}`.toLowerCase();
+      return fullName.includes(lowercasedFilter);
+    });
+  }, [citas, searchTerm]);
+
   // Agrupar citas por día usando useMemo para optimizar
   const citasAgrupadas = useMemo(() => {
-    if (!citas) return {};
-
-    return citas.reduce((acc, cita) => {
+    if (!citasFiltradas) return {};
+    return citasFiltradas.reduce((acc, cita) => {
       const fecha = new Date(cita.fecha).toLocaleDateString("es-VE", {
         timeZone: "UTC", // Asegura que la fecha se interprete correctamente
       });
@@ -51,7 +64,7 @@ const BitacoraCitas = () => {
       acc[fecha].push(cita);
       return acc;
     }, {});
-  }, [citas]);
+  }, [citasFiltradas]);
 
   const diasOrdenados = useMemo(
     () => Object.keys(citasAgrupadas).sort((a, b) => new Date(b) - new Date(a)),
@@ -114,6 +127,16 @@ const BitacoraCitas = () => {
       <div className="bitacora-header">
         <BookOpen size={32} />
         <h1>Gestión de Citas</h1>
+        <div className="bitacora-search-container">
+          <Search size={18} className="search-icon" />
+          <input
+            type="text"
+            placeholder="Buscar por cliente..."
+            className="search-input"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
 
       {diasOrdenados.length === 0 ? (

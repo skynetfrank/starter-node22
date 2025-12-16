@@ -20,6 +20,7 @@ import InputTester from "./components/InputTester";
 import AgendarCita from "./components/AgendarCita";
 import ConfiguracionHorario from "./components/ConfiguracionHorario";
 import BitacoraCitas from "./components/BitacoraCitas";
+import MisCitas from "./components/MisCitas";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -37,6 +38,9 @@ const router = createBrowserRouter(
         <Route path="/users/nuevo" element={<UserEditScreen />} /> {/* Ruta para crear */}
         <Route path="/users/:id/edit" element={<UserEditScreen />} /> {/* Ruta para editar */}
         <Route path="/dashboard" element={<CombinedDashboardWidget />}></Route>
+         <Route path="/miscitas" element={<MisCitas />}></Route>
+        
+
       </Route>
       <Route path="/enconstruccion" element={<UnderConstruction />}></Route>
       <Route path="/citas" element={<AgendarCita />}></Route>

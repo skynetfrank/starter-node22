@@ -9,15 +9,48 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  justify-content: space-between;
   color: var(--text-color);
   margin-bottom: 1rem;
   border-bottom: 2px solid var(--border-color);
+  flex-wrap: wrap;
 }
 
 .bitacora-header h1 {
   font-size: 2rem;
   font-weight: 700;
   margin: 0;
+}
+
+.bitacora-search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.6rem 0.75rem 0.6rem 2.5rem; /* Espacio para el ícono */
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: var(--color-primary);
+  color: var(--text-color);
+  font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
 }
 
 .dias-grid {
