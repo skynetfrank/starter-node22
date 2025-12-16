@@ -40,7 +40,7 @@ const BitacoraCitas = () => {
   const [cancelCita, { isLoading: isCancelling }] = useCancelCitaMutation();
   const [openDay, setOpenDay] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Mostrar 5 días por página
+  const itemsPerPage = 10; // Mostrar 5 días por página
 
   const [searchTerm, setSearchTerm] = useState("");
   // Proteger la ruta para que solo los administradores puedan acceder
