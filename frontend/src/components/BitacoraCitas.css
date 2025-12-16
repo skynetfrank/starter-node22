@@ -54,8 +54,9 @@
 }
 
 .dias-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra las tarjetas si son más angostas */
   gap: 1rem;
 }
 
@@ -67,6 +68,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 320px;
 }
 
 .dia-titulo {
@@ -157,6 +160,12 @@
   font-weight: 400;
 }
 
+.usuario-detalle.telefono {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 400;
+}
+
 .usuario-detalle.motivo {
   font-style: italic;
   color: #4b5563;
@@ -173,14 +182,14 @@
 .btn-cancelar {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
   background-color: #fee2e2;
   color: #b91c1c;
   border: 1px solid #fecaca;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.8rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
   cursor: pointer;
   transition: all 0.2s ease;
 }

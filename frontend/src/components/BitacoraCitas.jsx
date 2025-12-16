@@ -5,7 +5,18 @@ import Swal from "sweetalert2";
 import { useGetAllCitasQuery, useCancelCitaMutation } from "../slices/citasApiSlice";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
-import { Calendar, Clock, User, Mail, BookOpen, XCircle, MessageSquareText, ArrowDownUp, Search } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  User,
+  Mail,
+  Phone,
+  BookOpen,
+  Trash2,
+  MessageSquareText,
+  ArrowDownUp,
+  Search,
+} from "lucide-react";
 import "./BitacoraCitas.css";
 
 const BitacoraCitas = () => {
@@ -67,7 +78,7 @@ const BitacoraCitas = () => {
   }, [citasFiltradas]);
 
   const diasOrdenados = useMemo(
-    () => Object.keys(citasAgrupadas).sort((a, b) => new Date(b) - new Date(a)),
+    () => Object.keys(citasAgrupadas).sort((a, b) => new Date(a) - new Date(b)),
     [citasAgrupadas]
   );
 
@@ -183,6 +194,12 @@ const BitacoraCitas = () => {
                               {cita.user ? `${cita.user.nombre} ${cita.user.apellido}` : "Usuario no disponible"}
                             </span>
                           </div>
+                          {cita.user?.telefono && (
+                            <div className="usuario-detalle telefono">
+                              <Phone size={16} />
+                              <span>{cita.user.telefono}</span>
+                            </div>
+                          )}
                           {cita.user?.email && (
                             <div className="usuario-detalle email">
                               <Mail size={16} />
@@ -202,8 +219,7 @@ const BitacoraCitas = () => {
                             onClick={() => handleCancelClick(cita._id)}
                             disabled={isCancelling}
                           >
-                            <XCircle size={18} />
-                            <span>{isCancelling ? "Cancelando..." : "Cancelar"}</span>
+                            {isCancelling ? <div className="spinner-small"></div> : <Trash2 size={16} />}
                           </button>
                         </div>
                       </div>

@@ -14,7 +14,7 @@ citaRouter.get(
   isAdmin,
   expressAsyncHandler(async (req, res) => {
     const citas = await Cita.find({})
-      .populate("user", "nombre apellido email") // Obtiene detalles del usuario asociado
+      .populate("user", "nombre apellido email telefono") // Obtiene detalles del usuario asociado
       .sort({ fecha: -1, hora: 1 }); // Ordena por fecha más reciente primero
 
     res.send(citas);
