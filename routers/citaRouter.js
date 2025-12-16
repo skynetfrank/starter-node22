@@ -134,6 +134,16 @@ citaRouter.delete(
       if (cita.user.toString() !== req.user._id.toString() && !req.user.isAdmin) {
         return res.status(403).send({ message: "Acción no autorizada." });
       }
+
+      // Añadir validación para no permitir cancelar citas pasadas
+      const now = new Date();
+      const [citaHour, citaMinute] = cita.hora.split(":").map(Number);
+      const citaDateTime = new Date(cita.fecha);
+      citaDateTime.setHours(citaHour, citaMinute);
+      if (citaDateTime < now) {
+        return res.status(403).send({ message: "No se pueden cancelar citas que ya han ocurrido." });
+      }
+
       await cita.deleteOne();
       res.send({ message: "Cita cancelada" });
     } else {

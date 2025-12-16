@@ -157,6 +157,14 @@ const BitacoraCitas = () => {
           {diasOrdenados.map((dia) => {
             const isCardOpen = openDay === dia;
             return (
+              // Determinar si el día completo es pasado (para atenuar la tarjeta si todas las citas son pasadas)
+              // Aunque el filtro de citas futuras se haría en el backend o en el useMemo si se quisiera ocultar
+              // Aquí solo se atenúa visualmente si la cita individual es pasada.
+              // Para el día completo, podríamos verificar si todas las citas de ese día son pasadas.
+              // Por ahora, la atenuación se aplicará a cada cita individual.
+              // Si se desea atenuar el día completo si todas sus citas son pasadas, se necesitaría una lógica adicional aquí.
+              // Por simplicidad, la atenuación se aplica a nivel de cita-item.
+
               <details
                 key={dia}
                 className="dia-card"
@@ -166,6 +174,7 @@ const BitacoraCitas = () => {
                 <summary className="dia-titulo">
                   <Calendar size={20} />
                   <span>{dia}</span>
+                  <span className="cita-contador">{citasAgrupadas[dia].length}</span>
                   <button className="btn-ordenar" onClick={() => handleSortToggle(dia)}>
                     <ArrowDownUp size={16} />
                     <span>Ordenar</span>
@@ -181,49 +190,58 @@ const BitacoraCitas = () => {
                         return b.hora.localeCompare(a.hora);
                       }
                     })
-                    .map((cita) => (
-                      <div key={cita._id} className="cita-item">
-                        <div className="cita-hora">
-                          <Clock size={16} />
-                          <span>{cita.hora}</span>
-                        </div>
-                        <div className="cita-usuario">
-                          <div className="usuario-detalle">
-                            <User size={16} />
-                            <span>
-                              {cita.user ? `${cita.user.nombre} ${cita.user.apellido}` : "Usuario no disponible"}
-                            </span>
+                    .map((cita) => {
+                      const now = new Date();
+                      const [citaHour, citaMinute] = cita.hora.split(":").map(Number);
+                      const citaDateTime = new Date(cita.fecha);
+                      citaDateTime.setHours(citaHour, citaMinute, 0, 0);
+
+                      const isPastCita = citaDateTime < now;
+
+                      return (
+                        <div key={cita._id} className={`cita-item ${isPastCita ? "cita-pasada" : ""}`}>
+                          <div className="cita-hora">
+                            <Clock size={16} />
+                            <span>{cita.hora}</span>
                           </div>
-                          {cita.user?.telefono && (
-                            <div className="usuario-detalle telefono">
-                              <Phone size={16} />
-                              <span>{cita.user.telefono}</span>
+                          <div className="cita-usuario">
+                            <div className="usuario-detalle">
+                              <User size={16} />
+                              <span>
+                                {cita.user ? `${cita.user.nombre} ${cita.user.apellido}` : "Usuario no disponible"}
+                              </span>
                             </div>
-                          )}
-                          {cita.user?.email && (
-                            <div className="usuario-detalle email">
-                              <Mail size={16} />
-                              <span>{cita.user.email}</span>
-                            </div>
-                          )}
-                          {cita.motivo && (
-                            <div className="usuario-detalle motivo">
-                              <MessageSquareText size={16} />
-                              <span>{cita.motivo}</span>
-                            </div>
-                          )}
+                            {cita.user?.telefono && (
+                              <div className="usuario-detalle telefono">
+                                <Phone size={16} />
+                                <span>{cita.user.telefono}</span>
+                              </div>
+                            )}
+                            {cita.user?.email && (
+                              <div className="usuario-detalle email">
+                                <Mail size={16} />
+                                <span>{cita.user.email}</span>
+                              </div>
+                            )}
+                            {cita.motivo && (
+                              <div className="usuario-detalle motivo">
+                                <MessageSquareText size={16} />
+                                <span>{cita.motivo}</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="cita-acciones">
+                            <button
+                              className="btn-cancelar"
+                              onClick={() => handleCancelClick(cita._id)} // No se atenúa el botón de cancelar
+                              disabled={isCancelling || isPastCita}
+                            >
+                              {isCancelling ? <div className="spinner-small"></div> : <Trash2 size={16} />}
+                            </button>
+                          </div>
                         </div>
-                        <div className="cita-acciones">
-                          <button
-                            className="btn-cancelar"
-                            onClick={() => handleCancelClick(cita._id)}
-                            disabled={isCancelling}
-                          >
-                            {isCancelling ? <div className="spinner-small"></div> : <Trash2 size={16} />}
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                 </div>
               </details>
             );
