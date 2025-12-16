@@ -204,6 +204,13 @@ const BitacoraCitas = () => {
                         return (
                           <div key={cita._id} className={`cita-item ${isPastCita ? "cita-pasada" : ""}`}>
                             <div className="cita-hora">
+                              <button
+                                className="btn-cancelar"
+                                onClick={() => handleCancelClick(cita._id)}
+                                disabled={isCancelling || isPastCita}
+                              >
+                                {isCancelling ? <div className="spinner-small"></div> : <Trash2 size={16} />}
+                              </button>
                               <Clock size={16} />
                               <span>{cita.hora}</span>
                             </div>
@@ -232,15 +239,6 @@ const BitacoraCitas = () => {
                                   <span>{cita.motivo}</span>
                                 </div>
                               )}
-                            </div>
-                            <div className="cita-acciones">
-                              <button
-                                className="btn-cancelar"
-                                onClick={() => handleCancelClick(cita._id)}
-                                disabled={isCancelling || isPastCita}
-                              >
-                                {isCancelling ? <div className="spinner-small"></div> : <Trash2 size={16} />}
-                              </button>
                             </div>
                           </div>
                         );
