@@ -1,25 +1,24 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { setupListeners } from "@reduxjs/toolkit/query/react";
+import { apiSlice } from "./slices/apiSlice";
+import userSigninReducer from "./slices/userSlice";
 import splashReducer from "./slices/splashSlice";
-import { usersApi } from "./api/usersApi";
-import { clientesApi } from "./api/clientesApi"; // 1. Importar la nueva API de clientes
-import { apiSlice } from "./slices/apiSlice"; // Importar el apiSlice principal
-import userSigninReducer from "./slices/userSlice"; // 1. Importar el reducer del usuario
 
-// Automatically adds the thunk middleware and the Redux DevTools extension
+/**
+ * Configuración de la tienda de Redux.
+ *
+ * Ahora que todos los endpoints de la API se inyectan en `apiSlice`,
+ * solo necesitamos incluir un único reducer y un único middleware para la API.
+ */
 const store = configureStore({
-  // Automatically calls `combineReducers`
   reducer: {
-    // 2. Añadir los reducers al store
+    // Registra el reducer principal de la API.
+    [apiSlice.reducerPath]: apiSlice.reducer,
+    // Otros reducers de la aplicación.
     userSignin: userSigninReducer,
     splash: splashReducer,
-    [usersApi.reducerPath]: usersApi.reducer, // API de usuarios
-    [clientesApi.reducerPath]: clientesApi.reducer, // 2. Añadir el reducer de la API de clientes
-    [apiSlice.reducerPath]: apiSlice.reducer, // Añadir el reducer del apiSlice principal
   },
-  // El middleware de RTK Query se añade automáticamente al configurar el store
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(usersApi.middleware, clientesApi.middleware, apiSlice.middleware), // 3. Añadir el middleware del apiSlice principal
+  // Agrega el middleware de la API a la cadena de middleware por defecto.
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
 });
-setupListeners(store.dispatch);
+
 export default store;

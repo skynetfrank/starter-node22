@@ -5,7 +5,7 @@ import "react-calendar/dist/Calendar.css";
 import Swal from "sweetalert2";
 import { CalendarDays, Clock, CheckCircle, MessageSquare, User, Mail } from "lucide-react";
 import { useGetHorarioQuery, useGetDisponibilidadQuery, useCreateCitaMutation } from "../slices/citasApiSlice";
-import { useGetUsersQuery } from "../slices/usersApiSlice";
+import { useGetUsersQuery } from "../api/usersApi";
 import "./AgendarCita.css";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";

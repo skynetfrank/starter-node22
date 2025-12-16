@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useGetUsersQuery } from "../slices/usersApiSlice";
+import { useGetUsersQuery } from "../api/usersApi";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
 

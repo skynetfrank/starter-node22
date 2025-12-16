@@ -1,22 +1,7 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { apiSlice } from "../slices/apiSlice";
 
 // Define a service using a base URL and expected endpoints
-export const usersApi = createApi({
-  reducerPath: "usersApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/api",
-    prepareHeaders: (headers, { getState }) => {
-      // Acceso seguro al token usando encadenamiento opcional (optional chaining)
-      const token = getState().userSignin.userInfo?.token;
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-
-      return headers;
-    },
-  }),
-  // Definición de 'tags' para la gestión automática de la caché.
-  tagTypes: ["Users", "Vendedores"],
+export const usersApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     getUsers: build.query({
       query: ({ page = 1, limit = 10, search = "" }) => `/users?page=${page}&limit=${limit}&search=${search}`,
