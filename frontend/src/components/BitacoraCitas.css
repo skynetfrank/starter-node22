@@ -70,26 +70,24 @@
   flex-direction: column;
   width: 100%;
   max-width: 320px;
-  
 }
 
 .dia-card::details-content {
-	display: block;
-	margin-inline: 2rem;
-	block-size: 0;
-	overflow: hidden;
-	transition-property: block-size, content-visibility;
-	transition-duration: 0.5s;
-	transition-behavior: allow-discrete;
+  display: block;
+  margin-inline: 2rem;
+  block-size: 0;
+  overflow: hidden;
+  transition-property: block-size, content-visibility;
+  transition-duration: 0.5s;
+  transition-behavior: allow-discrete;
 }
 
-
 .dia-card[open]::details-content {
-	/* Fallback for browsers that don't support calc-size() function */
-	block-size: auto;
-	
-	/* calc-size() function allows transition to height: auto; */
-	block-size: calc-size(auto, size);
+  /* Fallback for browsers that don't support calc-size() function */
+  block-size: auto;
+
+  /* calc-size() function allows transition to height: auto; */
+  block-size: calc-size(auto, size);
 }
 
 .dia-titulo {
@@ -104,37 +102,6 @@
   margin: 0;
   border-bottom: 1px solid var(--border-color);
   cursor: pointer;
-}
-
-.cita-contador {
-  background-color: var(--color-tertiary);
-  color: var(--btn-primary-text);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 0.15rem 0.5rem;
-  border-radius: 1rem;
-  line-height: 1;
-  margin-left: 0.25rem;
-}
-
-.btn-ordenar {
-  margin-left: auto; /* Empuja el botón al final */
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: #e5e7eb;
-  color: #374151;
-  border: none;
-  padding: 0.25rem 0.6rem;
-  border-radius: 1rem; /* Píldora */
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.btn-ordenar:hover {
-  background-color: #d1d5db;
 }
 
 .citas-lista {
