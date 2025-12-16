@@ -4,7 +4,9 @@ import "react-calendar/dist/Calendar.css";
 import Swal from "sweetalert2";
 import { CalendarDays, Clock, CheckCircle } from "lucide-react";
 import { useGetHorarioQuery, useGetDisponibilidadQuery, useCreateCitaMutation } from "../slices/citasApiSlice";
-import "./AgendarCita.css"; // Crearemos este archivo para estilos
+import "./AgendarCita.css";
+import LoadingBox from "./LoadingBox";
+import MessageBox from "./MessageBox";
 
 const AgendarCita = () => {
   const [fecha, setFecha] = useState(new Date());
@@ -76,9 +78,11 @@ const AgendarCita = () => {
     }
   };
 
-  if (isLoadingHorario) return <p>Cargando configuración...</p>;
+  if (isLoadingHorario) return <LoadingBox />;
   if (errorHorario)
-    return <p className="error-msg">Error al cargar el horario. El servicio de citas no está disponible.</p>;
+    return (
+      <MessageBox variant="danger">Error al cargar el horario. El servicio de citas no está disponible.</MessageBox>
+    );
 
   return (
     <div className="agendar-cita-container">
@@ -100,7 +104,7 @@ const AgendarCita = () => {
           <Clock /> 2. Selecciona una Hora
         </h3>
         {isLoadingDisponibilidad ? (
-          <p>Cargando horarios...</p>
+          <LoadingBox />
         ) : (
           <div className="intervalos-grid">
             {intervalosDeTiempo.map((hora) => {
