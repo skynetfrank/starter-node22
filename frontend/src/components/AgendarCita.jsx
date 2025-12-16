@@ -60,6 +60,19 @@ const AgendarCita = () => {
     setActiveTab("confirmar"); // Cambiar a la pestaña de confirmación
   };
 
+  // Configuración del Toast de SweetAlert2 para notificaciones
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
+
   const handleReservarClick = async () => {
     if (!horaSeleccionada) {
       Swal.fire("Atención", "Por favor, selecciona una hora.", "warning");
@@ -68,12 +81,9 @@ const AgendarCita = () => {
 
     try {
       await createCita({ fecha: fechaQuery, hora: horaSeleccionada, motivo }).unwrap();
-      Swal.fire({
+      Toast.fire({
         icon: "success",
-        title: "¡Cita Reservada!",
-        text: `Tu cita para el ${fecha.toLocaleDateString()} a las ${horaSeleccionada} ha sido confirmada.`,
-        timer: 3000,
-        showConfirmButton: false,
+        title: "¡Cita reservada con éxito!",
       });
       setHoraSeleccionada(null);
       setMotivo("");
