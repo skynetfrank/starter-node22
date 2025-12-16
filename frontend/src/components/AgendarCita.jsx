@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import Swal from "sweetalert2";
-import { CalendarDays, Clock, CheckCircle } from "lucide-react";
+import { CalendarDays, Clock, CheckCircle, MessageSquare } from "lucide-react";
 import { useGetHorarioQuery, useGetDisponibilidadQuery, useCreateCitaMutation } from "../slices/citasApiSlice";
 import "./AgendarCita.css";
 import LoadingBox from "./LoadingBox";
@@ -11,6 +11,7 @@ import MessageBox from "./MessageBox";
 const AgendarCita = () => {
   const [fecha, setFecha] = useState(new Date());
   const [horaSeleccionada, setHoraSeleccionada] = useState(null);
+  const [motivo, setMotivo] = useState("");
 
   // 1. Obtener configuración de horario
   const { data: horario, isLoading: isLoadingHorario, error: errorHorario } = useGetHorarioQuery();
@@ -59,7 +60,7 @@ const AgendarCita = () => {
     }
 
     try {
-      await createCita({ fecha: fechaQuery, hora: horaSeleccionada }).unwrap();
+      await createCita({ fecha: fechaQuery, hora: horaSeleccionada, motivo }).unwrap();
       Swal.fire({
         icon: "success",
         title: "¡Cita Reservada!",
@@ -68,6 +69,7 @@ const AgendarCita = () => {
         showConfirmButton: false,
       });
       setHoraSeleccionada(null);
+      setMotivo("");
       refetch(); // Vuelve a consultar la disponibilidad para actualizar la UI
     } catch (err) {
       Swal.fire({
@@ -138,6 +140,17 @@ const AgendarCita = () => {
           <p>
             <strong>Hora:</strong> {horaSeleccionada || "No seleccionada"}
           </p>
+          <div className="motivo-cita">
+            <label htmlFor="motivo">
+              <MessageSquare size={16} /> Motivo (Opcional):
+            </label>
+            <textarea
+              id="motivo"
+              value={motivo}
+              onChange={(e) => setMotivo(e.target.value)}
+              placeholder="Ej: Consulta de seguimiento..."
+            />
+          </div>
         </div>
         <button className="btn-reservar" onClick={handleReservarClick} disabled={!horaSeleccionada || isCreatingCita}>
           {isCreatingCita ? "Reservando..." : "Reservar Cita"}

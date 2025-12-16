@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { useGetAllCitasQuery, useCancelCitaMutation } from "../slices/citasApiSlice";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
-import { Calendar, Clock, User, Mail, BookOpen, XCircle } from "lucide-react";
+import { Calendar, Clock, User, Mail, BookOpen, XCircle, MessageSquareText } from "lucide-react";
 import "./BitacoraCitas.css";
 
 const BitacoraCitas = () => {
@@ -141,6 +141,12 @@ const BitacoraCitas = () => {
                           <div className="usuario-detalle email">
                             <Mail size={16} />
                             <span>{cita.user.email}</span>
+                          </div>
+                        )}
+                        {cita.motivo && (
+                          <div className="usuario-detalle motivo">
+                            <MessageSquareText size={16} />
+                            <span>{cita.motivo}</span>
                           </div>
                         )}
                       </div>

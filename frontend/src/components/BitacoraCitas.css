@@ -104,6 +104,14 @@
   font-weight: 400;
 }
 
+.usuario-detalle.motivo {
+  font-style: italic;
+  color: #4b5563;
+  background-color: #f3f4f6;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
 .cita-acciones {
   margin-left: auto; /* Empuja el botón hacia la derecha */
   align-self: center; /* Centra el botón verticalmente */

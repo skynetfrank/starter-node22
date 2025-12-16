@@ -58,7 +58,7 @@ citaRouter.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { fecha, hora } = req.body;
+    const { fecha, hora, motivo } = req.body;
 
     // Validar que la hora no esté ya reservada para ese día
     const fechaObj = new Date(fecha);
@@ -78,6 +78,7 @@ citaRouter.post(
       user: req.user._id, // Obtenido del middleware isAuth
       fecha: startOfDay, // Guardamos la fecha normalizada
       hora,
+      motivo, // Guardamos el motivo
     });
 
     const citaCreada = await nuevaCita.save();

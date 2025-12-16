@@ -10,6 +10,8 @@ const citaSchema = new mongoose.Schema(
     fecha: { type: Date, required: true },
     // Almacenamos la hora como string "HH:mm" para simplicidad en el frontend
     hora: { type: String, required: true },
+    // Nuevo campo para el motivo o notas de la cita
+    motivo: { type: String, required: false, default: "" },
   },
   {
     timestamps: true,
