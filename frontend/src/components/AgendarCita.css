@@ -64,34 +64,28 @@
 
 .tabs-content {
   padding: 1.5rem;
-  position: relative;
-  min-height: 450px; /* Altura mínima para evitar saltos */
-}
-
-/* Paneles individuales */
-.panel {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
+  /* Usamos grid para superponer los paneles y que el contenedor se ajuste a la altura del contenido activo */
+  display: grid;
+  transition: height 0.4s ease-in-out;
 }
 
 /* Transición suave entre paneles */
 .tab-panel {
-  position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
-  right: 1.5rem;
+  /* Todos los paneles ocupan la misma celda del grid */
+  grid-row: 1 / -1;
+  grid-column: 1 / -1;
+
+  /* Ocultamos los paneles inactivos y los hacemos no interactivos */
   opacity: 0;
+  visibility: hidden;
   transform: translateY(10px);
-  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
-  pointer-events: none;
+  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out, visibility 0.4s;
 }
 
 .tab-panel.active {
+  /* Mostramos el panel activo */
   opacity: 1;
+  visibility: visible;
   transform: translateY(0);
   pointer-events: auto;
 }
@@ -220,7 +214,26 @@
   cursor: not-allowed;
 }
 
-/* --- Media Queries para Responsividad --- */
+/* Estilos para el buscador de usuarios */
+.user-search-container {
+  margin-bottom: 1.5rem;
+}
+
+.user-search-container label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #4b5563;
+}
+
+.user-search-container select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 1rem;
+}
 
 /* Para tablets y pantallas medianas */
 @media (max-width: 1024px) {

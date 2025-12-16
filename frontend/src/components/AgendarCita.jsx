@@ -1,18 +1,25 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { useSelector } from "react-redux";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import Swal from "sweetalert2";
-import { CalendarDays, Clock, CheckCircle, MessageSquare } from "lucide-react";
+import { CalendarDays, Clock, CheckCircle, MessageSquare, User, Mail } from "lucide-react";
 import { useGetHorarioQuery, useGetDisponibilidadQuery, useCreateCitaMutation } from "../slices/citasApiSlice";
+import { useGetUsersQuery } from "../slices/usersApiSlice";
 import "./AgendarCita.css";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
+import UserSearch from "./UserSearch";
 
 const AgendarCita = () => {
   const [activeTab, setActiveTab] = useState("dia"); // 'dia', 'hora', 'confirmar'
   const [fecha, setFecha] = useState(new Date());
   const [horaSeleccionada, setHoraSeleccionada] = useState(null);
   const [motivo, setMotivo] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null); // Para que el admin seleccione un usuario
+
+  // Obtener información del usuario desde el estado de Redux
+  const { userInfo } = useSelector((state) => state.userSignin);
 
   // 1. Obtener configuración de horario
   const { data: horario, isLoading: isLoadingHorario, error: errorHorario } = useGetHorarioQuery();
@@ -79,14 +86,23 @@ const AgendarCita = () => {
       return;
     }
 
+    // Determinar para qué usuario es la cita
+    const targetUserId = userInfo.isAdmin && selectedUser ? selectedUser._id : userInfo._id;
+
+    if (!targetUserId) {
+      Swal.fire("Atención", "Por favor, selecciona un cliente para la cita.", "warning");
+      return;
+    }
+
     try {
-      await createCita({ fecha: fechaQuery, hora: horaSeleccionada, motivo }).unwrap();
+      await createCita({ fecha: fechaQuery, hora: horaSeleccionada, motivo, userId: targetUserId }).unwrap();
       Toast.fire({
         icon: "success",
         title: "¡Cita reservada con éxito!",
       });
       setHoraSeleccionada(null);
       setMotivo("");
+      setSelectedUser(null);
       setActiveTab("dia"); // Volver a la primera pestaña
       refetch(); // Vuelve a consultar la disponibilidad para actualizar la UI
     } catch (err) {
@@ -97,6 +113,18 @@ const AgendarCita = () => {
       });
     }
   };
+
+  // Efecto para establecer el usuario seleccionado si no es admin
+  useEffect(() => {
+    if (userInfo && !userInfo.isAdmin) setSelectedUser(userInfo);
+  }, [userInfo]);
+
+  // Limpiar el usuario seleccionado por el admin si se cambia de pestaña
+  useEffect(() => {
+    if (userInfo && userInfo.isAdmin) {
+      setSelectedUser(null);
+    }
+  }, [activeTab, userInfo]);
 
   if (isLoadingHorario) return <LoadingBox />;
   if (errorHorario)
@@ -169,6 +197,31 @@ const AgendarCita = () => {
         {/* Panel de Confirmación */}
         <div className={`tab-panel ${activeTab === "confirmar" ? "active" : ""}`}>
           <div className="resumen-cita">
+            {/* Si es admin, muestra el buscador de usuarios */}
+            {userInfo && userInfo.isAdmin && <UserSearch onUserSelect={setSelectedUser} />}
+
+            {/* Muestra los datos del cliente (seleccionado por admin o el propio usuario) */}
+            {selectedUser ? (
+              <div className="datos-usuario">
+                <h4 className="resumen-subtitle">Datos del Cliente</h4>
+                <p>
+                  <User size={16} />
+                  <strong>Nombre:</strong> {selectedUser.nombre} {selectedUser.apellido}
+                </p>
+                <p>
+                  <Mail size={16} />
+                  <strong>Email:</strong> {selectedUser.email}
+                </p>
+              </div>
+            ) : (
+              !userInfo.isAdmin && (
+                <MessageBox variant="warning">
+                  Por favor, <a href="/signin">inicia sesión</a> para poder reservar una cita.
+                </MessageBox>
+              )
+            )}
+
+            <h4 className="resumen-subtitle">Detalles de la Cita</h4>
             <p>
               <strong>Día:</strong>{" "}
               {fecha.toLocaleDateString("es-VE", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
@@ -188,7 +241,11 @@ const AgendarCita = () => {
               />
             </div>
           </div>
-          <button className="btn-reservar" onClick={handleReservarClick} disabled={!horaSeleccionada || isCreatingCita}>
+          <button
+            className="btn-reservar"
+            onClick={handleReservarClick}
+            disabled={!horaSeleccionada || isCreatingCita || !selectedUser}
+          >
             {isCreatingCita ? "Reservando..." : "Reservar Cita"}
           </button>
         </div>
