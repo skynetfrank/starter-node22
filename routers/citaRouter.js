@@ -2,6 +2,7 @@ import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import Cita from "../models/citaModel.js";
 import { isAuth, isAdmin } from "../utils.js";
+import User from "../models/user.js"; // Importar el modelo de usuario para validación
 import { body, validationResult } from "express-validator";
 
 const citaRouter = express.Router();
@@ -53,17 +54,43 @@ citaRouter.post(
   isAuth,
   [body("fecha", "La fecha es obligatoria").not().isEmpty(), body("hora", "La hora es obligatoria").not().isEmpty()],
   expressAsyncHandler(async (req, res) => {
+    // Añadir validación para userId si se envía (solo para admins)
+    const validationRules = [
+      body("fecha", "La fecha es obligatoria").not().isEmpty(),
+      body("hora", "La hora es obligatoria").not().isEmpty(),
+      body("userId").optional().isMongoId().withMessage("ID de usuario inválido"),
+    ];
+
+    await Promise.all(validationRules.map((validation) => validation.run(req)));
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { fecha, hora, motivo } = req.body;
+    const { fecha, hora, motivo, userId } = req.body; // Ahora recibimos userId del body
+
+    // Determinar para qué usuario se agendará la cita
+    let appointmentUserId;
+    if (req.user.isAdmin && userId) {
+      // Si es admin y se proporciona un userId, usar ese userId
+      appointmentUserId = userId;
+      // Opcional: Verificar que el userId proporcionado por el admin exista
+      const targetUser = await User.findById(userId);
+      if (!targetUser) {
+        return res.status(404).send({ message: "El usuario especificado no existe." });
+      }
+    } else if (!req.user.isAdmin && userId && userId !== req.user._id.toString()) {
+      return res.status(403).send({ message: "No tienes permiso para agendar citas para otros usuarios." });
+    } else {
+      appointmentUserId = req.user._id; // Por defecto, el usuario logueado
+    }
 
     // Validar que la hora no esté ya reservada para ese día
-    const fechaObj = new Date(fecha);
-    const startOfDay = new Date(new Date(fechaObj).setUTCHours(0, 0, 0, 0));
-    const endOfDay = new Date(new Date(fechaObj).setUTCHours(23, 59, 59, 999));
+    // Normalizar la fecha para la consulta, igual que en la ruta de disponibilidad
+    const fechaDate = new Date(fecha); // fecha es YYYY-MM-DD
+    const startOfDay = new Date(new Date(fechaDate).setUTCHours(0, 0, 0, 0));
+    const endOfDay = new Date(new Date(fechaDate).setUTCHours(23, 59, 59, 999));
 
     const citaExistente = await Cita.findOne({
       fecha: { $gte: startOfDay, $lte: endOfDay },
@@ -75,8 +102,8 @@ citaRouter.post(
     }
 
     const nuevaCita = new Cita({
-      user: req.user._id, // Obtenido del middleware isAuth
-      fecha: startOfDay, // Guardamos la fecha normalizada
+      user: appointmentUserId, // Usamos el ID de usuario determinado
+      fecha: startOfDay, // La fecha ya está normalizada al inicio del día
       hora,
       motivo, // Guardamos el motivo
     });
