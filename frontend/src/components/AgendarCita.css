@@ -1,12 +1,66 @@
-/* Contenedor principal */
-.agendar-cita-container {
-  display: flex;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  max-width: 1200px;
+/* --- NUEVOS ESTILOS PARA LA INTERFAZ DE TABS --- */
+
+.agendar-cita-container-tabs {
+  max-width: 500px; /* Ancho más compacto */
   margin: 2rem auto;
-  background-color: #f9fafb;
+  background-color: white;
   border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  overflow: hidden; /* Para contener los bordes redondeados */
+}
+
+.tabs-nav {
+  display: flex;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.tab-btn:hover:not(:disabled) {
+  color: #1f2937;
+}
+
+.tab-btn.active {
+  color: #3b82f6;
+}
+
+.tab-btn:disabled {
+  color: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* Indicador de la pestaña activa */
+.tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #3b82f6;
+}
+
+.tabs-content {
+  padding: 1.5rem;
+  position: relative;
+  min-height: 450px; /* Altura mínima para evitar saltos */
 }
 
 /* Paneles individuales */
@@ -19,28 +73,22 @@
   flex-direction: column;
 }
 
-.calendario-panel {
-  flex: 1.2; /* El calendario ocupa un poco más de espacio */
+/* Transición suave entre paneles */
+.tab-panel {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+  pointer-events: none;
 }
 
-.horario-panel {
-  flex: 1.5; /* El panel de horas es el más grande */
-}
-
-.confirmacion-panel {
-  flex: 1;
-}
-
-.panel-title {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #e5e7eb;
+.tab-panel.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 /* Estilos para react-calendar */
@@ -68,7 +116,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   gap: 0.75rem;
-  max-height: 400px;
+  max-height: 380px; /* Ajustado a la nueva altura */
   overflow-y: auto;
   padding: 0.5rem;
 }
@@ -107,7 +155,7 @@
 .resumen-cita {
   background-color: #f3f4f6;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 1.5rem;
   margin-bottom: 1.5rem;
   flex-grow: 1;
 }
@@ -171,19 +219,23 @@
 
 /* Para tablets y pantallas medianas */
 @media (max-width: 1024px) {
-  .agendar-cita-container {
-    flex-direction: column;
-  }
+  /* El diseño ya es compacto, no se necesita cambio de flex-direction */
 }
 
 /* Para dispositivos móviles */
 @media (max-width: 768px) {
-  .agendar-cita-container {
+  .agendar-cita-container-tabs {
     padding: 1rem;
     margin: 1rem auto;
+    width: 95%;
   }
 
-  .panel {
+  .tabs-content {
     padding: 1rem;
+  }
+  .tab-panel {
+    left: 1rem;
+    right: 1rem;
+    top: 1rem;
   }
 }

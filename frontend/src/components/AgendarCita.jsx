@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import Swal from "sweetalert2";
@@ -9,6 +9,7 @@ import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
 
 const AgendarCita = () => {
+  const [activeTab, setActiveTab] = useState("dia"); // 'dia', 'hora', 'confirmar'
   const [fecha, setFecha] = useState(new Date());
   const [horaSeleccionada, setHoraSeleccionada] = useState(null);
   const [motivo, setMotivo] = useState("");
@@ -51,6 +52,12 @@ const AgendarCita = () => {
   const handleDateChange = (nuevaFecha) => {
     setFecha(nuevaFecha);
     setHoraSeleccionada(null); // Resetear hora al cambiar de día
+    setActiveTab("hora"); // Cambiar a la pestaña de selección de hora
+  };
+
+  const handleHoraSelect = (hora) => {
+    setHoraSeleccionada(hora);
+    setActiveTab("confirmar"); // Cambiar a la pestaña de confirmación
   };
 
   const handleReservarClick = async () => {
@@ -70,6 +77,7 @@ const AgendarCita = () => {
       });
       setHoraSeleccionada(null);
       setMotivo("");
+      setActiveTab("dia"); // Volver a la primera pestaña
       refetch(); // Vuelve a consultar la disponibilidad para actualizar la UI
     } catch (err) {
       Swal.fire({
@@ -87,74 +95,93 @@ const AgendarCita = () => {
     );
 
   return (
-    <div className="agendar-cita-container">
-      <div className="panel calendario-panel">
-        <h3 className="panel-title">
-          <CalendarDays /> 1. Selecciona un Día
-        </h3>
-        <Calendar
-          onChange={handleDateChange}
-          value={fecha}
-          minDate={new Date()} // No permitir fechas pasadas
-          tileClassName={({ date, view }) => (view === "month" && date.getDay() === 0 ? "domingo-deshabilitado" : null)}
-          tileDisabled={({ date, view }) => view === "month" && date.getDay() === 0} // Deshabilitar Domingos
-        />
-      </div>
-
-      <div className="panel horario-panel">
-        <h3 className="panel-title">
-          <Clock /> 2. Selecciona una Hora
-        </h3>
-        {isLoadingDisponibilidad ? (
-          <LoadingBox />
-        ) : (
-          <div className="intervalos-grid">
-            {intervalosDeTiempo.map((hora) => {
-              const isOcupada = horasOcupadas.includes(hora);
-              return (
-                <button
-                  key={hora}
-                  className={`hora-slot ${horaSeleccionada === hora ? "seleccionada" : ""} ${
-                    isOcupada ? "ocupada" : ""
-                  }`}
-                  onClick={() => setHoraSeleccionada(hora)}
-                  disabled={isOcupada}
-                >
-                  {hora}
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      <div className="panel confirmacion-panel">
-        <h3 className="panel-title">
-          <CheckCircle /> 3. Confirma tu Cita
-        </h3>
-        <div className="resumen-cita">
-          <p>
-            <strong>Día:</strong>{" "}
-            {fecha.toLocaleDateString("es-VE", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
-          </p>
-          <p>
-            <strong>Hora:</strong> {horaSeleccionada || "No seleccionada"}
-          </p>
-          <div className="motivo-cita">
-            <label htmlFor="motivo">
-              <MessageSquare size={16} /> Motivo (Opcional):
-            </label>
-            <textarea
-              id="motivo"
-              value={motivo}
-              onChange={(e) => setMotivo(e.target.value)}
-              placeholder="Ej: Consulta de seguimiento..."
-            />
-          </div>
-        </div>
-        <button className="btn-reservar" onClick={handleReservarClick} disabled={!horaSeleccionada || isCreatingCita}>
-          {isCreatingCita ? "Reservando..." : "Reservar Cita"}
+    <div className="agendar-cita-container-tabs">
+      <div className="tabs-nav">
+        <button className={`tab-btn ${activeTab === "dia" ? "active" : ""}`} onClick={() => setActiveTab("dia")}>
+          <CalendarDays size={18} />
+          <span>Día</span>
         </button>
+        <button
+          className={`tab-btn ${activeTab === "hora" ? "active" : ""}`}
+          onClick={() => setActiveTab("hora")}
+          disabled={!fecha}
+        >
+          <Clock size={18} />
+          <span>Hora</span>
+        </button>
+        <button
+          className={`tab-btn ${activeTab === "confirmar" ? "active" : ""}`}
+          onClick={() => setActiveTab("confirmar")}
+          disabled={!horaSeleccionada}
+        >
+          <CheckCircle size={18} />
+          <span>Confirmar</span>
+        </button>
+      </div>
+
+      <div className="tabs-content">
+        {/* Panel del Calendario */}
+        <div className={`tab-panel ${activeTab === "dia" ? "active" : ""}`}>
+          <Calendar
+            onChange={handleDateChange}
+            value={fecha}
+            minDate={new Date()}
+            tileClassName={({ date, view }) =>
+              view === "month" && date.getDay() === 0 ? "domingo-deshabilitado" : null
+            }
+            tileDisabled={({ date, view }) => view === "month" && date.getDay() === 0}
+          />
+        </div>
+
+        {/* Panel de Horarios */}
+        <div className={`tab-panel ${activeTab === "hora" ? "active" : ""}`}>
+          {isLoadingDisponibilidad ? (
+            <LoadingBox />
+          ) : (
+            <div className="intervalos-grid">
+              {intervalosDeTiempo.map((hora) => {
+                const isOcupada = horasOcupadas.includes(hora);
+                return (
+                  <button
+                    key={hora}
+                    className={`hora-slot ${horaSeleccionada === hora ? "seleccionada" : ""}`}
+                    onClick={() => !isOcupada && handleHoraSelect(hora)}
+                    disabled={isOcupada}
+                  >
+                    {hora}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Panel de Confirmación */}
+        <div className={`tab-panel ${activeTab === "confirmar" ? "active" : ""}`}>
+          <div className="resumen-cita">
+            <p>
+              <strong>Día:</strong>{" "}
+              {fecha.toLocaleDateString("es-VE", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+            </p>
+            <p>
+              <strong>Hora:</strong> {horaSeleccionada || "No seleccionada"}
+            </p>
+            <div className="motivo-cita">
+              <label htmlFor="motivo">
+                <MessageSquare size={16} /> Motivo (Opcional):
+              </label>
+              <textarea
+                id="motivo"
+                value={motivo}
+                onChange={(e) => setMotivo(e.target.value)}
+                placeholder="Ej: Consulta de seguimiento..."
+              />
+            </div>
+          </div>
+          <button className="btn-reservar" onClick={handleReservarClick} disabled={!horaSeleccionada || isCreatingCita}>
+            {isCreatingCita ? "Reservando..." : "Reservar Cita"}
+          </button>
+        </div>
       </div>
     </div>
   );
