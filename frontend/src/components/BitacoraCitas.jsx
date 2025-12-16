@@ -16,6 +16,10 @@ import {
   MessageSquareText,
   ArrowDownUp,
   Search,
+  ChevronsLeft,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsRight,
 } from "lucide-react";
 import "./BitacoraCitas.css";
 
@@ -35,6 +39,8 @@ const BitacoraCitas = () => {
   // Hook para la mutación de cancelar cita
   const [cancelCita, { isLoading: isCancelling }] = useCancelCitaMutation();
   const [openDay, setOpenDay] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Mostrar 5 días por página
 
   const [searchTerm, setSearchTerm] = useState("");
   // Proteger la ruta para que solo los administradores puedan acceder
@@ -78,6 +84,17 @@ const BitacoraCitas = () => {
     () => Object.keys(citasAgrupadas).sort((a, b) => new Date(a) - new Date(b)),
     [citasAgrupadas]
   );
+
+  // --- Lógica de Paginación ---
+  const totalPages = Math.ceil(diasOrdenados.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentDias = diasOrdenados.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Cambiar de página y asegurarse de que el día abierto se cierre si no está en la nueva página
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   useEffect(() => {
     setOpenDay(diasOrdenados[0] || null);
@@ -149,7 +166,7 @@ const BitacoraCitas = () => {
         <MessageBox variant="info">No hay citas registradas en la bitácora.</MessageBox>
       ) : (
         <div className="dias-grid">
-          {diasOrdenados.map((dia) => {
+          {currentDias.map((dia) => {
             const isCardOpen = openDay === dia;
             return (
               // Determinar si el día completo es pasado (para atenuar la tarjeta si todas las citas son pasadas)
@@ -233,6 +250,40 @@ const BitacoraCitas = () => {
               </details>
             );
           })}
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="pagination-container">
+          <button onClick={() => handlePageChange(1)} disabled={currentPage === 1} className="pagination-btn">
+            <ChevronsLeft size={18} />
+          </button>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="pagination-btn"
+          >
+            <ChevronLeft size={18} />
+          </button>
+
+          <span className="pagination-info">
+            Página {currentPage} de {totalPages}
+          </span>
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="pagination-btn"
+          >
+            <ChevronRight size={18} />
+          </button>
+          <button
+            onClick={() => handlePageChange(totalPages)}
+            disabled={currentPage === totalPages}
+            className="pagination-btn"
+          >
+            <ChevronsRight size={18} />
+          </button>
         </div>
       )}
     </div>
