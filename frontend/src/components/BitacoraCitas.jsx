@@ -2,10 +2,10 @@ import React, { useMemo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
-import { useGetAllCitasQuery } from "../slices/citasApiSlice";
+import { useGetAllCitasQuery, useCancelCitaMutation } from "../slices/citasApiSlice";
 import LoadingBox from "./LoadingBox";
 import MessageBox from "./MessageBox";
-import { Calendar, Clock, User, Mail, BookOpen } from "lucide-react";
+import { Calendar, Clock, User, Mail, BookOpen, XCircle } from "lucide-react";
 import "./BitacoraCitas.css";
 
 const BitacoraCitas = () => {
@@ -20,6 +20,9 @@ const BitacoraCitas = () => {
   } = useGetAllCitasQuery(undefined, {
     skip: !userInfo?.isAdmin, // No ejecutar la consulta si el usuario no es admin
   });
+
+  // Hook para la mutación de cancelar cita
+  const [cancelCita, { isLoading: isCancelling }] = useCancelCitaMutation();
   const [openDay, setOpenDay] = useState(null);
 
   // Proteger la ruta para que solo los administradores puedan acceder
@@ -73,11 +76,34 @@ const BitacoraCitas = () => {
     setOpenDay(isOpen ? dia : null);
   };
 
+  const handleCancelClick = async (citaId) => {
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Esta acción no se puede revertir. La cita será cancelada permanentemente.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sí, cancelar cita",
+      cancelButtonText: "No, mantener",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await cancelCita(citaId).unwrap();
+        Swal.fire("¡Cancelada!", "La cita ha sido cancelada con éxito.", "success");
+        // La lista se actualizará automáticamente gracias a `invalidatesTags`
+      } catch (err) {
+        Swal.fire("Error", err?.data?.message || "No se pudo cancelar la cita.", "error");
+      }
+    }
+  };
+
   return (
     <div className="bitacora-container">
       <div className="bitacora-header">
         <BookOpen size={32} />
-        <h1>Bitácora de Citas</h1>
+        <h1>Gestión de Citas</h1>
       </div>
 
       {diasOrdenados.length === 0 ? (
@@ -117,6 +143,16 @@ const BitacoraCitas = () => {
                             <span>{cita.user.email}</span>
                           </div>
                         )}
+                      </div>
+                      <div className="cita-acciones">
+                        <button
+                          className="btn-cancelar"
+                          onClick={() => handleCancelClick(cita._id)}
+                          disabled={isCancelling}
+                        >
+                          <XCircle size={18} />
+                          <span>{isCancelling ? "Cancelando..." : "Cancelar"}</span>
+                        </button>
                       </div>
                     </div>
                   ))}

@@ -59,7 +59,7 @@
 
 .cita-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* Alinear al inicio para mejor distribución vertical */
   gap: 1rem;
   padding-bottom: 1.25rem;
   border-bottom: 1px solid var(--border-color);
@@ -85,6 +85,7 @@
 .cita-usuario {
   display: flex;
   flex-direction: column;
+  flex-grow: 1; /* Permite que esta sección ocupe el espacio sobrante */
   gap: 0.25rem;
 }
 
@@ -101,4 +102,30 @@
   font-size: 0.85rem;
   color: #6b7280;
   font-weight: 400;
+}
+
+.cita-acciones {
+  margin-left: auto; /* Empuja el botón hacia la derecha */
+  align-self: center; /* Centra el botón verticalmente */
+}
+
+.btn-cancelar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancelar:hover:not(:disabled) {
+  background-color: #fecaca;
+  color: #991b1b;
+  border-color: #fca5a5;
 }

@@ -29,8 +29,8 @@ export const citasApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Cita"],
     }),
 
-    // Endpoint para cancelar una cita
-    cancelarCita: builder.mutation({
+    // Mutación para cancelar (eliminar) una cita por su ID (solo para admins)
+    cancelCita: builder.mutation({
       query: (citaId) => ({
         url: `/api/citas/${citaId}`,
         method: "DELETE",
@@ -61,7 +61,7 @@ export const {
   useGetDisponibilidadQuery,
   useCreateCitaMutation,
   useGetMisCitasQuery,
-  useCancelarCitaMutation,
+  useCancelCitaMutation,
   useUpdateHorarioMutation,
   useGetAllCitasQuery,
 } = citasApiSlice;
