@@ -14,7 +14,6 @@ import {
   BookOpen,
   Trash2,
   MessageSquareText,
-  ArrowDownUp,
   Search,
   ChevronsLeft,
   ChevronLeft,

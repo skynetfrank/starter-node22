@@ -18,12 +18,12 @@ userRouter.get(
 
     const searchQuery = search
       ? {
-        $or: [
-          { nombre: { $regex: search, $options: "i" } },
-          { email: { $regex: search, $options: "i" } },
-          { cedula: { $regex: search, $options: "i" } },
-        ],
-      }
+          $or: [
+            { nombre: { $regex: search, $options: "i" } },
+            { email: { $regex: search, $options: "i" } },
+            { cedula: { $regex: search, $options: "i" } },
+          ],
+        }
       : {};
 
     const count = await User.countDocuments(searchQuery);
@@ -53,6 +53,7 @@ userRouter.post(
   body("email").isEmail().withMessage("Por favor, introduce un correo electrónico válido.").normalizeEmail(),
   body("password").notEmpty().withMessage("La contraseña no puede estar vacía."),
   expressAsyncHandler(async (req, res) => {
+    console.log("Signin request body:", req.body);
     // 2. Comprobar si hay errores de validación
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -115,18 +116,6 @@ userRouter.post(
   })
 );
 
-userRouter.get(
-  "/:id",
-  expressAsyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id);
-    if (user) {
-      res.send(user);
-    } else {
-      res.status(404).send({ message: "Usuario No Encontrado" });
-    }
-  })
-);
-
 userRouter.put(
   "/profile",
   isAuth,
@@ -170,56 +159,61 @@ userRouter.put(
   })
 );
 
-userRouter.delete(
-  "/:id",
-  isAuth,
-  isAdmin,
-  expressAsyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id);
-    if (user) {
-      // 1. No se puede eliminar a un usuario protegido
-      if (user.isProtected) {
-        res.status(400).send({ message: "No se puede eliminar a un usuario protegido." });
-        return;
+/**
+ * MEJORA: Agrupar rutas con el mismo patrón de URL ('/:id') usando router.route().
+ * Esto evita conflictos de enrutamiento y organiza mejor el código. Express
+ * ahora manejará correctamente las peticiones GET, PUT y DELETE para '/:id'.
+ */
+userRouter
+  .route("/:id")
+  .get(
+    isAuth,
+    expressAsyncHandler(async (req, res) => {
+      const user = await User.findById(req.params.id);
+      if (user) {
+        res.send(user);
+      } else {
+        res.status(404).send({ message: "Usuario No Encontrado" });
       }
-      // 2. Un admin no puede eliminarse a sí mismo con esta ruta
-      if (req.user._id === user._id.toString()) {
-        res.status(400).send({ message: "No puedes eliminar tu propia cuenta de administrador." });
-        return;
+    })
+  )
+  .put(
+    isAuth,
+    isAdmin,
+    expressAsyncHandler(async (req, res) => {
+      const user = await User.findById(req.params.id);
+      if (user) {
+        user.nombre = req.body.nombre ?? user.nombre;
+        user.apellido = req.body.apellido ?? user.apellido;
+        user.email = req.body.email ?? user.email;
+        user.isAdmin = Boolean(req.body.isAdmin);
+        user.isVendedor = Boolean(req.body.isVendedor);
+        const updatedUser = await user.save();
+        res.send({ message: "Usuario Actualizado", user: updatedUser });
+      } else {
+        res.status(404).send({ message: "Usuario No Encontrado" });
       }
-
-      // 3. Implementación de Soft Delete
-      user.isActive = false;
-      const deactivatedUser = await user.save();
-
-      res.send({ message: "Usuario desactivado correctamente", user: deactivatedUser });
-    } else {
-      res.status(404).send({ message: "Usuario No Encontrado" });
-    }
-  })
-);
-
-userRouter.put(
-  "/:id",
-  isAuth,
-  isAdmin,
-  expressAsyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id);
-    if (user) {
-      // Usar el operador de anulación de nulos (??) para permitir la actualización
-      // a valores "falsy" como cadenas vacías, pero no a null o undefined.
-      user.nombre = req.body.nombre ?? user.nombre;
-      user.apellido = req.body.apellido ?? user.apellido;
-      user.email = req.body.email ?? user.email;
-      user.isAdmin = Boolean(req.body.isAdmin);
-      user.isVendedor = Boolean(req.body.isVendedor);
-
-      const updatedUser = await user.save();
-      res.send({ message: "Usuario Actualizado", user: updatedUser });
-    } else {
-      res.status(404).send({ message: "Usuario No Encontrado" });
-    }
-  })
-);
+    })
+  )
+  .delete(
+    isAuth,
+    isAdmin,
+    expressAsyncHandler(async (req, res) => {
+      const user = await User.findById(req.params.id);
+      if (user) {
+        if (user.isProtected) {
+          return res.status(400).send({ message: "No se puede eliminar a un usuario protegido." });
+        }
+        if (req.user._id === user._id.toString()) {
+          return res.status(400).send({ message: "No puedes eliminar tu propia cuenta de administrador." });
+        }
+        user.isActive = false;
+        const deactivatedUser = await user.save();
+        res.send({ message: "Usuario desactivado correctamente", user: deactivatedUser });
+      } else {
+        res.status(404).send({ message: "Usuario No Encontrado" });
+      }
+    })
+  );
 
 export default userRouter;
